@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dxpt7g0id8eq6"]
+[gd_scene load_steps=2 format=3 uid="uid://dxpt7g0id8eq6"]
+
+[ext_resource type="Script" uid="uid://ctyom4fcyhjdb" path="res://scripts/MainMenu.gd" id="1"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -7,3 +9,80 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Bidding Brawl"
+horizontal_alignment = 1
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="UserLabel" type="Label" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+text = "Username:"
+horizontal_alignment = 2
+
+[node name="UserInput" type="LineEdit" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Player1"
+
+[node name="IpLabel" type="Label" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+text = "Server IP:"
+horizontal_alignment = 2
+
+[node name="IpInput" type="LineEdit" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "localhost"
+placeholder_text = "127.0.0.1"
+
+[node name="PortLabel" type="Label" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+text = "Port:"
+horizontal_alignment = 2
+
+[node name="PortInput" type="LineEdit" parent="CenterContainer/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "8910"
+placeholder_text = "8910"
+max_length = 5
+virtual_keyboard_type = 2
+
+[node name="Buttons" type="HBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HostButton" type="Button" parent="CenterContainer/VBox/Buttons"]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="CenterContainer/VBox/Buttons"]
+layout_mode = 2
+text = "Join"
+
+[node name="Status" type="Label" parent="CenterContainer/VBox"]
+modulate = Color(1, 1, 1, 0.9)
+layout_mode = 2
+text = "Enter details and Host or Join"
+horizontal_alignment = 1

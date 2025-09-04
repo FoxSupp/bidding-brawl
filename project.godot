@@ -11,5 +11,15 @@ config_version=5
 [application]
 
 config/name="Bidding-Brawl"
+run/main_scene="uid://dxpt7g0id8eq6"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NetworkManager="*res://scripts/NetworkManager.gd"
+
+[display]
+
+window/size/viewport_width=576
+window/size/viewport_height=324
