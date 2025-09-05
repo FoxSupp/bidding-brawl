@@ -1,12 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://5wu7j1ag62yo"]
-
-[ext_resource type="Script" uid="uid://dd32tbbhrppmk" path="res://scripts/game.gd" id="1_uwrxv"]
+[gd_scene load_steps=2 format=3 uid="uid://dvqhqpcj8g465"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8cj0n"]
 size = Vector2(500, 30)
 
 [node name="Game" type="Node2D"]
-script = ExtResource("1_uwrxv")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -29,5 +26,5 @@ grow_vertical = 2
 color = Color(0.408329, 0.408329, 0.408329, 1)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://dccdt80wk3efe")
+_spawnable_scenes = PackedStringArray("uid://bi1pll6ib7wfv")
 spawn_path = NodePath("..")

@@ -114,8 +114,13 @@ func _broadcast_players() -> void:
 	rpc("sync_players", players)
 	#sync_players(players) # also update locally without relying on call_local
 
-@rpc("call_local")
+@rpc("call_local", "authority")
 func sync_players(updated: Dictionary) -> void:
 	players = updated.duplicate(true)
-	print("HAHAHA")
 	emit_signal("players_updated", players)
+
+# start_game removed as part of lobby-only reset
+
+# load_game_scene removed
+
+# notify_game_scene_ready removed

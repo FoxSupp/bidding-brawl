@@ -39,7 +39,7 @@ func _on_players_updated(players: Dictionary) -> void:
 	_add_players_to_display()
 
 func _on_start_game_pressed() -> void:
-	nm.start_game()
+	print("Start Game pressed")
 
 func _on_main_menu_pressed() -> void:
 	nm.disconnect_from_server()
