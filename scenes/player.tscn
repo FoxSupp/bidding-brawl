@@ -1,4 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bi1pll6ib7wfv"]
+[gd_scene load_steps=6 format=3 uid="uid://bi1pll6ib7wfv"]
+
+[ext_resource type="Script" uid="uid://vxnkpoaq5sya" path="res://scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://cfx40nmtiadu8" path="res://scripts/player_input.gd" id="2_g2els"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u8vuu"]
 radius = 20.0
@@ -7,8 +10,38 @@ radius = 20.0
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("MuzzleRotation:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:health")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:score")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:dead")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
+properties/0/path = NodePath("InputSynch:move_input")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("InputSynch:jump_input")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("InputSynch:mouse_pos")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("InputSynch:fire_input")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_3vyb7")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 8
@@ -31,3 +64,33 @@ shape = SubResource("CircleShape2D_u8vuu")
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
+
+[node name="InputSynch" type="Node2D" parent="."]
+script = ExtResource("2_g2els")
+
+[node name="InputSynch" type="MultiplayerSynchronizer" parent="InputSynch"]
+root_path = NodePath("../..")
+replication_config = SubResource("SceneReplicationConfig_qhqgy")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
+position_smoothing_enabled = true
+drag_vertical_enabled = true
+
+[node name="MuzzleRotation" type="Node2D" parent="."]
+
+[node name="Sprite" type="ColorRect" parent="MuzzleRotation"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -4.0
+offset_right = 48.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Muzzle" type="Marker2D" parent="MuzzleRotation"]
+position = Vector2(44, 0)

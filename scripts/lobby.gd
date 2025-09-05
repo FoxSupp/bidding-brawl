@@ -6,40 +6,33 @@ extends Control
 
 const PLAYER_SLOT = preload("res://scenes/player_slot.tscn")
 const MENU_SCENE = preload("res://scenes/main_menu.tscn")
-var nm
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if has_node("/root/NetworkManager"):
-		print("MANAGER")
-		nm = get_node("/root/NetworkManager")
-		nm.players_updated.connect(_on_players_updated)
+		NetworkManager.players_updated.connect(_on_players_updated)
 		_add_players_to_display()
 	button_start_game.pressed.connect(_on_start_game_pressed)
 	button_main_menu.pressed.connect(_on_main_menu_pressed)
-	button_start_game.disabled = !nm.is_server()
+	button_start_game.disabled = !NetworkManager.is_server()
 
-
-	
 func _add_players_to_display():
+	# Delete all Players from the Display
 	for c in v_box_container.get_children():
 		c.queue_free()
-	for peer_id in nm.players:
-		print(nm.players[peer_id])
+	# Add all Players to the Lobby Display
+	for peer_id in NetworkManager.players:
 		var player_slot = PLAYER_SLOT.instantiate()
 		v_box_container.add_child(player_slot)
 		var player_name_node = player_slot.get_node_or_null("Background/PlayerName")
-		if player_name_node and player_name_node is Label:
-			player_name_node.text = nm.players[peer_id]
-		else:
-			print("Could not find PlayerName node in player_slot")
+		player_name_node.text = NetworkManager.players[peer_id]['username']
 
 func _on_players_updated(players: Dictionary) -> void:
-	print(players)
 	_add_players_to_display()
 
 func _on_start_game_pressed() -> void:
-	print("Start Game pressed")
+	if NetworkManager.is_server():
+		NetworkManager.rpc("start_game")
 
 func _on_main_menu_pressed() -> void:
-	nm.disconnect_from_server()
+	NetworkManager.disconnect_from_server()

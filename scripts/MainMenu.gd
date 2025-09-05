@@ -8,14 +8,13 @@ extends Control
 @onready var status_label: Label = $CenterContainer/VBox/Status
 
 func _ready() -> void:
-	if Engine.has_singleton("NetworkManager"):
-		# In case of script-only autoload access; also available as global Node
-		pass
 	if has_node("/root/NetworkManager"):
-		var nm = get_node("/root/NetworkManager")
-		nm.error.connect(_on_error)
+		NetworkManager.error.connect(_on_error)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
+	
+	
+	user_input.text = OS.get_cmdline_args()[1]
 
 func _on_host_pressed() -> void:
 	var username := user_input.text
@@ -25,8 +24,7 @@ func _on_host_pressed() -> void:
 		return
 	var port := int(port_text)
 	if has_node("/root/NetworkManager"):
-		var nm = get_node("/root/NetworkManager")
-		nm.host(port, username)
+		NetworkManager.host(port, username)
 
 func _on_join_pressed() -> void:
 	var username := user_input.text
@@ -37,8 +35,7 @@ func _on_join_pressed() -> void:
 		return
 	var port := int(port_text)
 	if has_node("/root/NetworkManager"):
-		var nm = get_node("/root/NetworkManager")
-		nm.join(ip, port, username)
+		NetworkManager.join(ip, port, username)
 
 func _on_error(msg: String) -> void:
 	status_label.text = msg

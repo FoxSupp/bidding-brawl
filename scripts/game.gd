@@ -1,0 +1,29 @@
+extends Node2D
+
+@onready var spawn_positions: Node2D = $SpawnPositions
+@onready var players: Node = $Players
+
+const PLAYER_SCENE = preload("res://scenes/player.tscn")
+
+func _ready() -> void:
+	NetworkManager.all_in_game.connect(_spawn_all)
+	NetworkManager.rpc_id(1, "request_set_self_in_game", true)
+
+
+func _spawn_all():
+	if multiplayer.is_server():
+		for player in NetworkManager.players:
+			var player_instance = PLAYER_SCENE.instantiate()
+			player_instance.name = str(player)
+			var spawn_points = spawn_positions.get_children()
+			if spawn_points.size() > 0:
+				var rand_pos = spawn_points.pick_random()
+				player_instance.position = rand_pos.position
+				rand_pos.get_parent().remove_child(rand_pos)
+				rand_pos.queue_free()
+			players.add_child(player_instance)
+		
+func add_score(score: int, shooter_id: int) -> void:
+	for player in players.get_children():
+		if player.name.to_int() == shooter_id:
+			player.add_score(score)
