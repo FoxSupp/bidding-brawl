@@ -24,6 +24,8 @@ func _ready() -> void:
 	spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
 	hp_bar.max_value = health
 	hp_bar.value = health
+	if input_synch.is_multiplayer_authority():
+		get_node("ColorRect").color = Color.YELLOW
 
 func _physics_process(delta: float) -> void:
 	if input_synch.is_multiplayer_authority():
