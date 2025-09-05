@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bi1pll6ib7wfv"]
+[gd_scene load_steps=7 format=3 uid="uid://bi1pll6ib7wfv"]
 
 [ext_resource type="Script" uid="uid://vxnkpoaq5sya" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cfx40nmtiadu8" path="res://scripts/player_input.gd" id="2_g2els"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g2els"]
+bg_color = Color(1, 0, 0.0784314, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u8vuu"]
 radius = 20.0
@@ -25,6 +28,12 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath(".:dead")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+properties/6/path = NodePath("HP/HPBar:value")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("HP/HPBar:max_value")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 properties/0/path = NodePath("InputSynch:move_input")
@@ -42,6 +51,29 @@ properties/3/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_3vyb7")
+
+[node name="HP" type="Node2D" parent="."]
+position = Vector2(0, -33)
+scale = Vector2(0.18, 0.18)
+
+[node name="HPBar" type="ProgressBar" parent="HP"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -109.0
+offset_top = -13.5
+offset_right = 109.0
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_g2els")
+max_value = 5.0
+step = 1.0
+value = 5.0
+show_percentage = false
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 8

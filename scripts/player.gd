@@ -1,9 +1,11 @@
 class_name Player
 extends CharacterBody2D
 
+signal died(player_id: int)
 
 @onready var input_synch: Node2D = $InputSynch
 @onready var muzzle_rotation: Node2D = $MuzzleRotation
+@onready var hp_bar: ProgressBar = $HP/HPBar
 
 
 const SPEED = 300.0
@@ -20,6 +22,8 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
+	hp_bar.max_value = health
+	hp_bar.value = health
 
 func _physics_process(delta: float) -> void:
 	if input_synch.is_multiplayer_authority():
@@ -69,6 +73,7 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	if not is_multiplayer_authority():
 		return
 	health -= damage
+	hp_bar.value = health
 	if health <= 0:
 		if shooter_id != name.to_int():
 			get_tree().get_root().get_node("Game").add_score(1, shooter_id)
@@ -84,3 +89,4 @@ func _check_health() -> void:
 		dead = true
 		visible = false
 		get_node("CollisionShape2D").disabled = true
+		emit_signal("died", name.to_int())
