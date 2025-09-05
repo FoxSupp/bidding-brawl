@@ -121,12 +121,19 @@ func start_game():
 # Clients call this on the server to register their username
 @rpc("any_peer")
 func register_player(username: String) -> void:
-	if not multiplayer.is_server():
-		return
-	var sender_id := multiplayer.get_remote_sender_id()
-	sender_id = 1 if sender_id == 0 else sender_id
-	players[sender_id] = {"username": username.strip_edges(), "in_game": false}
-	_broadcast_players()
+        if not multiplayer.is_server():
+                return
+        var sender_id := multiplayer.get_remote_sender_id()
+        sender_id = 1 if sender_id == 0 else sender_id
+       players[sender_id] = {
+               "username": username.strip_edges(),
+               "in_game": false,
+               "wins": 0,
+               "losses": 0,
+               "win_streak": 0,
+               "loss_streak": 0,
+       }
+        _broadcast_players()
 
 # Server sends current players to everyone (and itself)
 func _broadcast_players() -> void:
@@ -139,17 +146,38 @@ func sync_players(updated: Dictionary) -> void:
 
 @rpc("any_peer", "call_local")
 func request_set_self_in_game(value: bool) -> void:
-	if not multiplayer.is_server():
-		return
-	var id := multiplayer.get_remote_sender_id()
-	id = 1 if id == 0 else id
+        if not multiplayer.is_server():
+                return
+        var id := multiplayer.get_remote_sender_id()
+        id = 1 if id == 0 else id
 	
 	if players.has(id):
 		var entry = players[id]
 		if typeof(entry) == TYPE_DICTIONARY:
-			entry["in_game"] = value
-			players[id] = entry
-			rpc("sync_players", players)
+                        entry["in_game"] = value
+                        players[id] = entry
+                        rpc("sync_players", players)
+
+# Server records match results and broadcasts updated stats
+func record_match_result(winner_id: int) -> void:
+       if not multiplayer.is_server():
+               return
+       for peer_id in players.keys():
+               var entry = players[peer_id]
+               if typeof(entry) != TYPE_DICTIONARY:
+                       continue
+               entry["in_game"] = false
+               if peer_id == winner_id:
+                       entry["wins"] += 1
+                       entry["win_streak"] += 1
+                       entry["loss_streak"] = 0
+               else:
+                       entry["losses"] += 1
+                       entry["loss_streak"] += 1
+                       entry["win_streak"] = 0
+               players[peer_id] = entry
+       game_started = false
+       rpc("sync_players", players)
 
 func _change_scene(scene: PackedScene) -> void:
 	get_tree().change_scene_to_packed(scene)

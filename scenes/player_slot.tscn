@@ -33,3 +33,14 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Player 1"
 vertical_alignment = 1
+
+[node name="Stats" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "W:0 L:0 WS:0 LS:0"
+vertical_alignment = 1

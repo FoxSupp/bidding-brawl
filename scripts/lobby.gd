@@ -21,11 +21,20 @@ func _add_players_to_display():
 	for c in v_box_container.get_children():
 		c.queue_free()
 	# Add all Players to the Lobby Display
-	for peer_id in NetworkManager.players:
-		var player_slot = PLAYER_SLOT.instantiate()
-		v_box_container.add_child(player_slot)
-		var player_name_node = player_slot.get_node_or_null("Background/PlayerName")
-		player_name_node.text = NetworkManager.players[peer_id]['username']
+        for peer_id in NetworkManager.players:
+                var player_slot = PLAYER_SLOT.instantiate()
+                v_box_container.add_child(player_slot)
+                var player_name_node = player_slot.get_node_or_null("Background/PlayerName")
+               player_name_node.text = NetworkManager.players[peer_id]['username']
+               var stats_node = player_slot.get_node_or_null("Background/Stats")
+               if stats_node:
+                       var p = NetworkManager.players[peer_id]
+                       stats_node.text = "W:%d L:%d WS:%d LS:%d" % [
+                               p.get("wins", 0),
+                               p.get("losses", 0),
+                               p.get("win_streak", 0),
+                               p.get("loss_streak", 0),
+                       ]
 
 func _on_players_updated(players: Dictionary) -> void:
 	_add_players_to_display()

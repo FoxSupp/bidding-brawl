@@ -4,6 +4,7 @@ extends Node2D
 @onready var players: Node = $Players
 
 const PLAYER_SCENE = preload("res://scenes/player.tscn")
+var match_finished: bool = false
 
 func _ready() -> void:
 	NetworkManager.all_in_game.connect(_spawn_all)
@@ -29,11 +30,14 @@ func add_score(score: int, shooter_id: int) -> void:
 			player.add_score(score)
 
 func _on_player_died(player_id: int) -> void:
-	print(players.get_children())
-	var alive_players = []
-	for p in players.get_children():
-		if not p.dead:
-			alive_players.append(p)
-	if alive_players.size() == 1:
-		print("Only one player is alive: ", alive_players[0].name)
+        print(players.get_children())
+        var alive_players = []
+        for p in players.get_children():
+                if not p.dead:
+                        alive_players.append(p)
+       if alive_players.size() == 1 and not match_finished:
+               match_finished = true
+               var winner_id = alive_players[0].name.to_int()
+               print("Only one player is alive: ", alive_players[0].name)
+               NetworkManager.record_match_result(winner_id)
 	
