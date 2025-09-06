@@ -8,6 +8,7 @@ signal all_in_game
 const MENU_SCENE = preload("res://scenes/main_menu.tscn")
 const LOBBY_SCENE = preload("res://scenes/lobby.tscn")
 const GAME_SCENE = preload("res://scenes/game.tscn")
+const BIDDING_SCENE = preload("res://scenes/bidding_menu.tscn")
 const MAX_PLAYERS: int = 32
 
 var player_name: String = ""
@@ -123,6 +124,10 @@ func _on_server_disconnected() -> void:
 	disconnect_from_server()
 
 @rpc("authority", "call_local")
+func change_to_bidding() -> void:
+	_change_scene(BIDDING_SCENE)
+
+@rpc("authority", "call_local")
 func start_game() -> void:
 	_change_scene(GAME_SCENE)
 
@@ -145,7 +150,6 @@ func sync_players(updated: Dictionary) -> void:
 func request_set_self_in_game(value: bool) -> void:
 	if not multiplayer.is_server():
 		return
-	
 	var id: int = multiplayer.get_remote_sender_id()
 	id = 1 if id == 0 else id
 	
@@ -155,6 +159,15 @@ func request_set_self_in_game(value: bool) -> void:
 			entry["in_game"] = value
 			players[id] = entry
 			rpc("sync_players", players)
+
+@rpc("any_peer", "call_local")
+func set_player_in_game(player_id: int, value: bool) -> void:
+	if not multiplayer.is_server():
+		return
+	players[player_id] = {"in_game": value}
+	rpc("sync_players", players)
+	
+
 
 func _broadcast_players() -> void:
 	rpc("sync_players", players)

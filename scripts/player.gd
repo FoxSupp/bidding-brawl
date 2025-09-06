@@ -12,6 +12,7 @@ signal died(player_id: int)
 
 const SPEED: float = 300.0
 const JUMP_VELOCITY: float = -400.0
+const KILL_MONEY: int = 100
 const BULLET_SCENE = preload("res://scenes/bullet.tscn")
 
 var spectating_cam: Camera2D
@@ -81,7 +82,8 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	hp_bar.value = health
 	
 	if health <= 0 and shooter_id != name.to_int():
-		get_tree().get_root().get_node("Game").add_score(1, shooter_id)
+		SessionManager.addMoney(shooter_id, KILL_MONEY)
+		#get_tree().get_root().get_node("Game").add_score(1, shooter_id)
 
 func add_score(score_to_add: int) -> void:
 	if not is_multiplayer_authority():
@@ -99,13 +101,15 @@ func _handle_death() -> void:
 	died.emit(name.to_int())
 	
 	if is_multiplayer_authority():
-		get_tree().create_timer(0.1).timeout.connect(_despawn_player)
+		pass
+		# get_tree().create_timer(0.1).timeout.connect(_despawn_player)
 
-func _despawn_player() -> void:
+func despawn_player() -> void:
 	if not is_multiplayer_authority():
 		return
-		
 	var spawner = get_tree().root.get_node_or_null("Game/PlayerSpawner")
+	input_synch.get_node("InputSynch").public_visibility = false
+	await get_tree().process_frame
 	if spawner and spawner.has_method("despawn"):
 		spawner.despawn(self)
 	else:

@@ -16,8 +16,4 @@ func _on_body_entered(body: Node) -> void:
 	if body is Player:
 		body.take_damage(DAMAGE, player_id)
 	
-	var spawner: Node = get_tree().root.get_node_or_null("Game/BulletSpawner")
-	if spawner and spawner.has_method("despawn"):
-		spawner.despawn(self)
-	else:
-		call_deferred("queue_free")
+	call_deferred("queue_free")
