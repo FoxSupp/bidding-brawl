@@ -1,4 +1,11 @@
-[gd_scene format=3 uid="uid://bnwcqcma1nw5y"]
+[gd_scene load_steps=3 format=3 uid="uid://bnwcqcma1nw5y"]
+
+[ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding_menu.gd" id="1_6fnxy"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6fnxy"]
+properties/0/path = NodePath(".:ready_players")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [node name="BiddingMenu" type="Control"]
 layout_mode = 3
@@ -7,3 +14,52 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_6fnxy")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 68.0
+offset_top = 38.0
+offset_right = -67.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelReadyPlayers" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -82.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Waiting for Players to Ready up
+0/0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonReady" type="Button" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Ready"
+
+[node name="PlayerStats" type="VBoxContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 143.0
+grow_horizontal = 2
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_6fnxy")
