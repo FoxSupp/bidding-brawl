@@ -98,6 +98,9 @@ func despawn_player() -> void:
 	dead = true
 	if not is_multiplayer_authority():
 		return
-	input_synch.get_node("InputSynch").public_visibility = false
+	# Safe node access to prevent null reference errors
+	var input_synch_node = input_synch.get_node_or_null("InputSynch")
+	if input_synch_node and is_instance_valid(input_synch_node):
+		input_synch_node.public_visibility = false
 	await get_tree().process_frame
 	queue_free()
