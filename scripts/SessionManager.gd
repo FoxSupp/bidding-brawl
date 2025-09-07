@@ -3,10 +3,6 @@ extends Node
 
 var player_stats = {}
 
-@rpc("authority", "call_local")
-func sync_player_stats(stats: Dictionary) -> void:
-	player_stats = stats
-
 func newPlayer(peer_id: int) -> void:
 	player_stats[peer_id] = {
 		"username": NetworkManager.get_username(peer_id),

@@ -65,5 +65,4 @@ func _end_game(winner_id: int):
 	NetworkManager.game_started = false
 	await get_tree().create_timer(1).timeout
 	if multiplayer.is_server():
-		SessionManager.rpc("sync_player_stats", SessionManager.player_stats)
 		NetworkManager.rpc("change_to_bidding")
