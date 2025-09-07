@@ -74,22 +74,6 @@ func _handle_shooting() -> void:
 	
 	get_tree().root.get_node("Game/Projectiles").add_child(projectile, true)
 
-func take_damage(damage: int, shooter_id: int) -> void:
-	if not is_multiplayer_authority():
-		return
-	
-	health -= damage
-	hp_bar.value = health
-	
-	if health <= 0 and shooter_id != name.to_int():
-		SessionManager.addMoney(shooter_id, KILL_MONEY)
-		#get_tree().get_root().get_node("Game").add_score(1, shooter_id)
-
-func add_score(score_to_add: int) -> void:
-	if not is_multiplayer_authority():
-		return
-	score += score_to_add
-
 func _handle_death() -> void:
 	dead = true
 	visible = false
@@ -99,18 +83,21 @@ func _handle_death() -> void:
 		input_synch.set_multiplayer_authority(1)
 	
 	died.emit(name.to_int())
-	
-	if is_multiplayer_authority():
-		pass
-		# get_tree().create_timer(0.1).timeout.connect(_despawn_player)
 
-func despawn_player() -> void:
+func take_damage(damage: int, shooter_id: int) -> void:
 	if not is_multiplayer_authority():
 		return
-	var spawner = get_tree().root.get_node_or_null("Game/PlayerSpawner")
+	
+	health -= damage
+	hp_bar.value = health
+	
+	if health <= 0 and shooter_id != name.to_int():
+		SessionManager.addMoney(shooter_id, KILL_MONEY)
+
+func despawn_player() -> void:
+	dead = true
+	if not is_multiplayer_authority():
+		return
 	input_synch.get_node("InputSynch").public_visibility = false
 	await get_tree().process_frame
-	if spawner and spawner.has_method("despawn"):
-		spawner.despawn(self)
-	else:
-		queue_free()
+	queue_free()
