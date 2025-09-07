@@ -6,6 +6,9 @@ signal player_ready
 @onready var button_ready: Button = $Background/ButtonReady
 @onready var label_ready_players: Label = $Background/LabelReadyPlayers
 @onready var player_stats: VBoxContainer = $Background/PlayerStats
+@onready var timer_start_round: Timer = $TimerStartRound
+@onready var label_timer_countdown: Label = $Background/LabelTimerCountdown
+
 const PLAYER_STAT_BLOCK = preload("res://scenes/player_stat_block.tscn")
 
 func _ready() -> void:
@@ -18,8 +21,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if multiplayer.is_server():
 		if ready_players.size() >= NetworkManager.players.size():
-			await get_tree().create_timer(1.5).timeout
-			NetworkManager.rpc("start_game")
+			timer_start_round.timeout.connect(func(): NetworkManager.rpc("start_game"))
+	_update_display()
 
 @rpc("any_peer", "call_local")
 func ready_player():
@@ -29,9 +32,17 @@ func ready_player():
 func _ready_button_pressed():
 	rpc("ready_player")
 
+func _start_timer():
+	if not timer_start_round.is_stopped():
+		return
+	timer_start_round.start()
+
 func _update_display():
 	if ready_players.size() == NetworkManager.players.size():
 		label_ready_players.text = "All Players Ready, Game Starting Soon"
+		label_timer_countdown.show()
+		_start_timer()
+		label_timer_countdown.text = "Game Starting in " + str("%.1f" % timer_start_round.time_left)
 	else:
 		label_ready_players.text = "Waiting for Players to Ready up \n " + str(ready_players.size()) + "/" + str(NetworkManager.players.size())
 	# Ready = all show text game starting soon
