@@ -70,7 +70,7 @@ func _handle_movement(delta: float) -> void:
 func add_weapon_upgrade_effect(effect: WeaponEffect) -> void:
 	if multiplayer.is_server():
 		_weapon_effects.append(effect)
-		SessionManager.addWeaponEffect(name.to_int(), effect)
+		SessionManager.rpc("addWeaponEffect", name.to_int(), effect)
 
 func _load_persistent_weapon_effects() -> void:
 	var persistent_effects = SessionManager.getWeaponEffects(name.to_int())
@@ -152,7 +152,7 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	hp_bar.value = health
 	
 	if health <= 0 and shooter_id != name.to_int():
-		SessionManager.addMoney(shooter_id, KILL_MONEY)
+		SessionManager.rpc("addMoney", shooter_id, KILL_MONEY)
 
 func despawn_player() -> void:
 	dead = true

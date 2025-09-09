@@ -31,7 +31,7 @@ func _spawn_all_players() -> void:
 func _add_players_to_session() -> void:
 	for peer_id in NetworkManager.players:
 		if not SessionManager.player_stats.has(peer_id):
-			SessionManager.newPlayer(peer_id)
+			SessionManager.rpc("newPlayer", peer_id)
 
 
 func add_score(score: int, shooter_id: int) -> void:
@@ -47,7 +47,7 @@ func _on_player_died(_player_id: int) -> void:
 		_end_game(alive_players[0].name.to_int())
 
 func _end_game(winner_id: int):
-	SessionManager.win(winner_id)
+	SessionManager.rpc("win", winner_id)
 	
 	# Clean up all bullets before despawning players to prevent multiplayer despawn errors
 	var projectiles_node = get_node_or_null("Projectiles")
