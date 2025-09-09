@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Test" load_steps=2 format=3 uid="uid://cdd4d4sor26np"]
+
+[ext_resource type="Script" uid="uid://bgvlnwxbxkjck" path="res://scripts/upgrades/effects/test.gd" id="1_pxrpq"]
+
+[resource]
+script = ExtResource("1_pxrpq")
+upgrade_name = "Weapon Effect"
+metadata/_custom_type_script = "uid://bgvlnwxbxkjck"

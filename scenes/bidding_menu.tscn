@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnwcqcma1nw5y"]
+[gd_scene load_steps=5 format=3 uid="uid://bnwcqcma1nw5y"]
 
 [ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding_menu.gd" id="1_6fnxy"]
 [ext_resource type="Resource" uid="uid://0jdpwk0ckbg0" path="res://scripts/upgrades/effects/multi_shot_effect.tres" id="2_2l2ip"]
 [ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/player_stat_block.tscn" id="2_2qcm0"]
+[ext_resource type="Resource" uid="uid://cdd4d4sor26np" path="res://scripts/upgrades/effects/test.tres" id="3_2l2ip"]
 
 [node name="BiddingMenu" type="Control"]
 layout_mode = 3
@@ -12,7 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6fnxy")
-all_upgrades = Array[Resource]([ExtResource("2_2l2ip")])
+all_upgrades = Array[Resource]([ExtResource("2_2l2ip"), ExtResource("3_2l2ip")])
 
 [node name="Background" type="Panel" parent="."]
 layout_mode = 1

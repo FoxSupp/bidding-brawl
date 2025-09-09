@@ -13,7 +13,7 @@ const UPGRADE_SLOT = preload("res://scenes/upgrade_slot.tscn")
 @onready var label_timer_countdown: Label = $Background/LabelTimerCountdown
 @onready var upgrades: HBoxContainer = $Background/Upgrades
 
-@export var all_upgrades: Array[Resource] = []
+@export var all_upgrades: Array[Resource]
 
 
 func _ready() -> void:
@@ -21,7 +21,6 @@ func _ready() -> void:
 	button_ready.pressed.connect(func(): rpc("ready_player"))
 	if multiplayer.is_server():
 		rpc("update_player_stats_from_server", SessionManager.player_stats)
-		rpc("update_upgrades_from_server", all_upgrades)
 
 func _process(_delta: float) -> void:
 	if not multiplayer.is_server(): return
@@ -62,22 +61,13 @@ func update_player_stats_from_server(stats_data: Dictionary):
 			block.get_node("Panel/LabelMoney").text = "Money: " + str(data["money"])
 			block.get_node("Panel/LabelWins").text = "Wins: " + str(data["wins"])
 
-@rpc("authority", "call_local")
-func update_upgrades_from_server(upgrades_server):
-	for child in upgrades.get_children(): child.queue_free()
-	for i in range(4):
-		var upgrade = upgrades_server[randi() % upgrades_server.size()]
-		var slot = UPGRADE_SLOT.instantiate()
-		slot.upgrade = upgrade
-		upgrades.add_child(slot)
-
 func _update_stats():
 	for child in player_stats.get_children(): child.queue_free()
 	for peer_id in SessionManager.player_stats:
 		var data = SessionManager.player_stats[peer_id]
 		if typeof(data) == TYPE_DICTIONARY:
 			var block = PLAYER_STAT_BLOCK.instantiate()
-			player_stats.add_child(block)
+			player_stats.add_child(block, true)
 			block.get_node("Panel/LabelUsername").text = str(data["username"])
 			block.get_node("Panel/LabelMoney").text = "Money: " + str(data["money"])
 			block.get_node("Panel/LabelWins").text = "Wins: " + str(data["wins"])

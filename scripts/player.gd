@@ -59,20 +59,13 @@ func _handle_movement(delta: float) -> void:
 	velocity.x = input_synch.move_input * SPEED if input_synch.move_input else move_toward(velocity.x, 0, SPEED)
 	move_and_slide()
 
-func _load_persistent_weapon_effects() -> void:
-	var persistent_effects = SessionManager.getWeaponEffects(name.to_int())
-	_weapon_effects = persistent_effects.duplicate(true)
-
-
-
-
 func _handle_aiming() -> void:
 	muzzle_rotation.rotation = (input_synch.mouse_pos - position).angle()
 
 func _handle_shooting() -> void:
 	if not input_synch.fire_input:
 		return
-	
+	input_synch.fire_input = false
 	var muzzle: Marker2D = muzzle_rotation.get_node("Muzzle")
 	var dir := muzzle.global_position.direction_to(input_synch.mouse_pos).normalized()
 	var ctx := {
@@ -120,7 +113,9 @@ func _handle_shooting() -> void:
 		if "speed" in projectile: projectile.speed = ctx.speed
 		if "lifetime" in projectile: projectile.lifetime = ctx.lifetime
 		projectiles_root.add_child(projectile, true)
-
+	
+	await input_synch.get_tree().process_frame
+	
 func _handle_death() -> void:
 	dead = true
 	visible = false
@@ -130,6 +125,10 @@ func _handle_death() -> void:
 		input_synch.set_multiplayer_authority(1)
 	
 	died.emit(name.to_int())
+
+func _load_persistent_weapon_effects() -> void:
+	var persistent_effects = SessionManager.getWeaponEffects(name.to_int())
+	_weapon_effects = persistent_effects.duplicate(true)
 
 func take_damage(damage: int, shooter_id: int) -> void:
 	if not is_multiplayer_authority():

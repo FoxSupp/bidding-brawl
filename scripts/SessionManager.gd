@@ -26,7 +26,7 @@ func addWeaponEffect(peer_id: int, effect: WeaponEffect) -> void:
 		player_stats[peer_id]["weapon_effects"].append(effect)
 	rpc("_sync_players", player_stats)
 
-@rpc("authority", "call_local")
+@rpc("any_peer", "call_local")
 func addMoney(peer_id: int, amount: int) -> void:
 	if not multiplayer.is_server(): return
 		
