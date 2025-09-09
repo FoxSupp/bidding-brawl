@@ -33,7 +33,6 @@ func _add_players_to_session() -> void:
 		if not SessionManager.player_stats.has(peer_id):
 			SessionManager.rpc("newPlayer", peer_id)
 
-
 func add_score(score: int, shooter_id: int) -> void:
 	
 	var target_player: Node = players.get_node_or_null(str(shooter_id))

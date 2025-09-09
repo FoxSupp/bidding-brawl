@@ -1,11 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bnwcqcma1nw5y"]
+[gd_scene load_steps=4 format=3 uid="uid://bnwcqcma1nw5y"]
 
 [ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding_menu.gd" id="1_6fnxy"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6fnxy"]
-properties/0/path = NodePath(".:ready_players")
-properties/0/spawn = true
-properties/0/replication_mode = 1
+[ext_resource type="Resource" uid="uid://0jdpwk0ckbg0" path="res://scripts/upgrades/effects/multi_shot_effect.tres" id="2_2l2ip"]
+[ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/player_stat_block.tscn" id="2_2qcm0"]
 
 [node name="BiddingMenu" type="Control"]
 layout_mode = 3
@@ -15,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6fnxy")
+all_upgrades = Array[Resource]([ExtResource("2_2l2ip")])
 
 [node name="Background" type="Panel" parent="."]
 layout_mode = 1
@@ -34,12 +32,26 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -108.0
-offset_bottom = -59.0
+offset_top = -161.0
+offset_bottom = -112.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Waiting for Players to Ready up
 0/0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelTimerCountdown" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -110.0
+offset_bottom = -87.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Game starting in 5"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -49,7 +61,10 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -31.0
+offset_left = 415.0
+offset_top = -78.0
+offset_right = -415.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Ready"
@@ -61,23 +76,30 @@ anchor_right = 1.0
 offset_bottom = 143.0
 grow_horizontal = 2
 
-[node name="LabelTimerCountdown" type="Label" parent="Background"]
-visible = false
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -57.0
-offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Game starting in 5"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="PlayerStatBlock" parent="Background/PlayerStats" instance=ExtResource("2_2qcm0")]
+layout_mode = 2
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_6fnxy")
+[node name="PlayerStatBlock2" parent="Background/PlayerStats" instance=ExtResource("2_2qcm0")]
+layout_mode = 2
+
+[node name="PlayerStatBlock3" parent="Background/PlayerStats" instance=ExtResource("2_2qcm0")]
+layout_mode = 2
+
+[node name="PlayerStatBlock4" parent="Background/PlayerStats" instance=ExtResource("2_2qcm0")]
+layout_mode = 2
+
+[node name="Upgrades" type="HBoxContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+alignment = 1
 
 [node name="TimerStartRound" type="Timer" parent="."]
 wait_time = 5.0

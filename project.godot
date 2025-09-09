@@ -22,8 +22,8 @@ SessionManager="*res://scripts/SessionManager.gd"
 
 [display]
 
-window/size/viewport_width=576
-window/size/viewport_height=324
+window/size/resizable=false
+window/stretch/mode="canvas_items"
 
 [input]
 
@@ -62,3 +62,9 @@ debug_1={
 2d_physics/layer_1="Env"
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Projectiles"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

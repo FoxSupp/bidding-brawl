@@ -1,21 +1,27 @@
 extends Control
 
 const PLAYER_STAT_BLOCK = preload("res://scenes/player_stat_block.tscn")
+const NEW_ROUND_TIMER: float = 3.0
+const UPGRADE_SLOT = preload("res://scenes/upgrade_slot.tscn")
+
+
 @export var ready_players: Array = []
 @onready var button_ready: Button = $Background/ButtonReady
 @onready var label_ready_players: Label = $Background/LabelReadyPlayers
 @onready var player_stats: VBoxContainer = $Background/PlayerStats
 @onready var timer_start_round: Timer = $TimerStartRound
 @onready var label_timer_countdown: Label = $Background/LabelTimerCountdown
+@onready var upgrades: HBoxContainer = $Background/Upgrades
 
-const NEW_ROUND_TIMER: float = 3.0
+@export var all_upgrades: Array[Resource] = []
+
 
 func _ready() -> void:
 	label_ready_players.text = "Waiting for Players to Ready up \n0/" + str(NetworkManager.players.size())
 	button_ready.pressed.connect(func(): rpc("ready_player"))
 	if multiplayer.is_server():
-		_update_stats()
 		rpc("update_player_stats_from_server", SessionManager.player_stats)
+		rpc("update_upgrades_from_server", all_upgrades)
 
 func _process(_delta: float) -> void:
 	if not multiplayer.is_server(): return
@@ -55,6 +61,15 @@ func update_player_stats_from_server(stats_data: Dictionary):
 			block.get_node("Panel/LabelUsername").text = str(data["username"])
 			block.get_node("Panel/LabelMoney").text = "Money: " + str(data["money"])
 			block.get_node("Panel/LabelWins").text = "Wins: " + str(data["wins"])
+
+@rpc("authority", "call_local")
+func update_upgrades_from_server(upgrades_server):
+	for child in upgrades.get_children(): child.queue_free()
+	for i in range(4):
+		var upgrade = upgrades_server[randi() % upgrades_server.size()]
+		var slot = UPGRADE_SLOT.instantiate()
+		slot.upgrade = upgrade
+		upgrades.add_child(slot)
 
 func _update_stats():
 	for child in player_stats.get_children(): child.queue_free()

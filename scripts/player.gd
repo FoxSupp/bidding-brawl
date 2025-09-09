@@ -34,14 +34,6 @@ func _ready() -> void:
 	if input_synch.is_multiplayer_authority():
 		color_rect.color = Color.YELLOW
 
-# DEBUG
-func _process(delta: float) -> void:
-	if not multiplayer.is_server():
-		return
-	if Input.is_action_just_pressed("debug_1"):
-		var eff = MultiShotEffect.new()
-		add_weapon_upgrade_effect(eff)
-
 func _physics_process(delta: float) -> void:
 	if input_synch.is_multiplayer_authority():
 		camera.enabled = not dead
@@ -66,11 +58,6 @@ func _handle_movement(delta: float) -> void:
 	
 	velocity.x = input_synch.move_input * SPEED if input_synch.move_input else move_toward(velocity.x, 0, SPEED)
 	move_and_slide()
-
-func add_weapon_upgrade_effect(effect: WeaponEffect) -> void:
-	if multiplayer.is_server():
-		_weapon_effects.append(effect)
-		SessionManager.rpc("addWeaponEffect", name.to_int(), effect)
 
 func _load_persistent_weapon_effects() -> void:
 	var persistent_effects = SessionManager.getWeaponEffects(name.to_int())
