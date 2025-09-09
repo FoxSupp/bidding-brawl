@@ -9,8 +9,21 @@ func newPlayer(peer_id: int) -> void:
 		"money": 0,
 		"wins": 0,
 		"winstreak": 0,
-		"losingstreak": 0
+		"losingstreak": 0,
+		"weapon_effects": []
 	}
+
+func addWeaponEffect(peer_id: int, effect: WeaponEffect) -> void:
+	if player_stats.has(peer_id):
+		player_stats[peer_id]["weapon_effects"].append(effect)
+
+func getWeaponEffects(peer_id: int) -> Array[WeaponEffect]:
+	if player_stats.has(peer_id):
+		var effects: Array[WeaponEffect] = []
+		for effect in player_stats[peer_id]["weapon_effects"]:
+			effects.append(effect as WeaponEffect)
+		return effects
+	return []
 
 func addMoney(peer_id: int, amount: int) -> void:
 	player_stats[peer_id]["money"] += amount

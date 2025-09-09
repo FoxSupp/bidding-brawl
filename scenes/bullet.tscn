@@ -14,6 +14,9 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:linear_velocity")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+properties/3/path = NodePath(".:lifetime")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="Bullet" type="RigidBody2D"]
 collision_layer = 4
