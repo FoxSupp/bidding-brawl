@@ -40,7 +40,7 @@ func _ready() -> void:
 	
 	"""Debug for all things only happening on Server Player"""
 	if multiplayer.is_server() and input_synch.get_multiplayer_authority() == 1:
-		UpgradeManager.apply_upgrade(self, "upgrade_multishot")
+		#UpgradeManager.apply_upgrade(self, "upgrade_multishot")
 		pass
 	
 	_init_upgrades()
@@ -141,6 +141,7 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	health -= damage
 	hp_bar.value = health
 	
+	# TODO: implement Fix to not award 2 times Money if killed with 2 Bullets due to Multishot
 	if health <= 0 and shooter_id != name.to_int():
 		SessionManager.rpc("addMoney", shooter_id, KILL_MONEY)
 

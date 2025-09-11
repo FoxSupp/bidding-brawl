@@ -15,6 +15,7 @@ var player_name: String = ""
 var peer: ENetMultiplayerPeer
 var players: Dictionary = {}
 var game_started: bool = false
+var game_version: String
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -22,6 +23,9 @@ func _ready() -> void:
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	
+	# Get game version from project settings
+	game_version = ProjectSettings.get_setting("application/config/version", "unknown")
 
 func _process(_delta: float) -> void:
 	if multiplayer.multiplayer_peer and multiplayer.is_server():
@@ -112,7 +116,8 @@ func _on_peer_disconnected(id: int) -> void:
 func _on_connected_to_server() -> void:
 	emit_signal("connection_status_changed", "Connected to server as %s" % player_name)
 	players.clear()
-	rpc_id(1, "register_player", player_name)
+	# Send version to server for validation first
+	rpc_id(1, "check_version", game_version)
 
 func _on_connection_failed() -> void:
 	emit_signal("error", "Connection failed")
@@ -166,7 +171,32 @@ func set_player_in_game(player_id: int, value: bool) -> void:
 		return
 	players[player_id] = {"in_game": value}
 	rpc("sync_players", players)
+
+@rpc("any_peer")
+func check_version(client_version: String) -> void:
+	if not multiplayer.is_server():
+		return
+		
+	var sender_id: int = multiplayer.get_remote_sender_id()
 	
+	if client_version != game_version:
+		print("Version mismatch: Server has %s, Client %d has %s" % [game_version, sender_id, client_version])
+		rpc_id(sender_id, "version_mismatch", game_version)
+		# Disconnect the client
+		multiplayer.multiplayer_peer.disconnect_peer(sender_id)
+	else:
+		print("Version check passed for client %d" % sender_id)
+		rpc_id(sender_id, "version_accepted")
+
+@rpc("authority")
+func version_mismatch(server_version: String) -> void:
+	emit_signal("error", "Version mismatch! Server version: %s, Your version: %s" % [server_version, game_version])
+	disconnect_from_server()
+
+@rpc("authority")
+func version_accepted() -> void:
+	print("Version check passed, proceeding with registration")
+	rpc_id(1, "register_player", player_name)
 
 
 func _broadcast_players() -> void:
