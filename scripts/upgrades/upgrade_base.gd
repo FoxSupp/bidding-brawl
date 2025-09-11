@@ -5,5 +5,5 @@ extends Resource
 @export var name: String
 @export var description: String
 
-func apply(player: Player) -> void:
+func apply(_player: Player) -> void:
 	push_error("apply() must be implemented in subclass")
