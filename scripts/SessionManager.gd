@@ -14,9 +14,9 @@ func newPlayer(peer_id: int) -> void:
 		"wins": 0,
 		"winstreak": 0,
 		"losingstreak": 0,
+		"upgrades": []
 	}
 	rpc("_sync_players", player_stats)
-
 
 @rpc("any_peer", "call_local")
 func addMoney(peer_id: int, amount: int) -> void:
@@ -43,6 +43,14 @@ func win(peer_id: int) -> void:
 				player_stats[other_id]["losingstreak"] += 1
 	rpc("_sync_players", player_stats)
 	
+@rpc("authority", "call_local")
+func addUpgrade(peer_id: int, upgrade_id: String) -> void:
+	if not multiplayer.is_server(): return
+	
+	if player_stats.has(peer_id):
+		player_stats[peer_id]["upgrades"].append(upgrade_id)
+	rpc("_sync_players", player_stats)
+
 @rpc("authority", "call_local")
 func _sync_players(new_stats: Dictionary):
 	player_stats = new_stats.duplicate(true)

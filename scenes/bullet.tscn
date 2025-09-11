@@ -41,6 +41,7 @@ grow_vertical = 2
 color = Color(1, 0.184314, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_h1aey")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

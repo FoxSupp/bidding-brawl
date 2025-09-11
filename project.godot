@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 NetworkManager="*res://scripts/NetworkManager.gd"
 SessionManager="*res://scripts/SessionManager.gd"
+UpgradeManager="*res://scripts/upgrades/upgrade_manager.gd"
 
 [display]
 
