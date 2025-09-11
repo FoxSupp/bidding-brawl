@@ -1,11 +1,9 @@
 extends Node
 
-signal player_stats_updated(new_stats: Dictionary)
-
 var player_stats = {}
 
-# Server-Only Funktionen
-@rpc("authority", "call_local")
+signal player_stats_received(peer_id: int, stats: Dictionary)
+
 func newPlayer(peer_id: int) -> void:
 	if not multiplayer.is_server(): return
 	player_stats[peer_id] = {
@@ -16,18 +14,16 @@ func newPlayer(peer_id: int) -> void:
 		"losingstreak": 0,
 		"upgrades": []
 	}
-	rpc("_sync_players", player_stats)
 
-@rpc("any_peer", "call_local")
-func addMoney(peer_id: int, amount: int) -> void:
+func add_money(peer_id: int, amount: int) -> void:
 	if not multiplayer.is_server(): return
+
+	print("MONEY ADDED: ", amount)
 		
 	if player_stats.has(peer_id):
 		player_stats[peer_id]["money"] += amount
-	
-	rpc("_sync_players", player_stats)
+	rpc_id(peer_id, "receive_player_stats", peer_id, player_stats[peer_id])
 
-@rpc("authority", "call_local")
 func win(peer_id: int) -> void:
 	if not multiplayer.is_server(): return
 		
@@ -41,17 +37,19 @@ func win(peer_id: int) -> void:
 			if other_id != peer_id:
 				player_stats[other_id]["winstreak"] = 0
 				player_stats[other_id]["losingstreak"] += 1
-	rpc("_sync_players", player_stats)
-	
-@rpc("authority", "call_local")
-func addUpgrade(peer_id: int, upgrade_id: String) -> void:
+
+func add_upgrade(peer_id: int, upgrade_id: String) -> void:
 	if not multiplayer.is_server(): return
 	
 	if player_stats.has(peer_id):
 		player_stats[peer_id]["upgrades"].append(upgrade_id)
-	rpc("_sync_players", player_stats)
 
-@rpc("authority", "call_local")
-func _sync_players(new_stats: Dictionary):
-	player_stats = new_stats.duplicate(true)
-	emit_signal("player_stats_updated", new_stats)
+@rpc("any_peer", "call_local")
+func get_player_stats(peer_id: int):
+	if not multiplayer.is_server(): return
+	var stats = player_stats[peer_id]
+	rpc_id(peer_id, "receive_player_stats", peer_id, stats)
+
+@rpc("any_peer", "call_local")
+func receive_player_stats(peer_id: int, stats: Dictionary):
+	emit_signal("player_stats_received", peer_id, stats)

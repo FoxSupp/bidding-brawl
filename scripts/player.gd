@@ -18,7 +18,7 @@ const BULLET_SCENE = preload("res://scenes/bullet.tscn")
 
 var spectating_cam: Camera2D
 
-var shot_cooldown_reset: float = 1.0
+var shot_cooldown_reset: float = 0.2
 var shoot_cooldown: float = 0.0
 
 """ Upgrade Variables """
@@ -43,14 +43,15 @@ func _ready() -> void:
 		#UpgradeManager.apply_upgrade(self, "upgrade_multishot")
 		pass
 	
-	_init_upgrades()
+	if multiplayer.is_server():
+		_init_upgrades()
+		health += upgrade_max_health
+		hp_bar.max_value = health
+		hp_bar.value = health
 	
-	spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
-	health += upgrade_max_health
-	hp_bar.max_value = health
-	hp_bar.value = health
 	
 	if input_synch.is_multiplayer_authority():
+		spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
 		color_rect.color = Color.YELLOW
 
 func _physics_process(delta: float) -> void:
@@ -143,14 +144,14 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	
 	# TODO: implement Fix to not award 2 times Money if killed with 2 Bullets due to Multishot
 	if health <= 0 and shooter_id != name.to_int():
-		SessionManager.rpc("addMoney", shooter_id, KILL_MONEY)
+		SessionManager.add_money(shooter_id, KILL_MONEY)
 
 func despawn_player() -> void:
 	dead = true
 	if not is_multiplayer_authority():
 		return
 	for upgrade in upgrades:
-		SessionManager.rpc("addUpgrade", name.to_int(), upgrade.id)
+		SessionManager.add_upgrade(name.to_int(), upgrade.id)
 	# Safe node access to prevent null reference errors
 	var input_synch_node = input_synch.get_node_or_null("InputSynch")
 	if input_synch_node and is_instance_valid(input_synch_node):

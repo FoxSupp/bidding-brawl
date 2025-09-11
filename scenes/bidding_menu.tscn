@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnwcqcma1nw5y"]
+[gd_scene load_steps=5 format=3 uid="uid://bnwcqcma1nw5y"]
 
 [ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding_menu.gd" id="1_6fnxy"]
 [ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/player_stat_block.tscn" id="2_2qcm0"]
 [ext_resource type="Script" uid="uid://bp1b68d3621ng" path="res://scripts/bidding_manager.gd" id="2_e2fi0"]
+[ext_resource type="PackedScene" uid="uid://4itayjujs3an" path="res://scenes/upgrade_slot.tscn" id="4_2l2ip"]
 
 [node name="BiddingMenu" type="Control"]
 layout_mode = 3
@@ -88,6 +89,45 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="PlayerStatBlock4" parent="Background/PlayerStats" instance=ExtResource("2_2qcm0")]
+layout_mode = 2
+
+[node name="LabelBidMoney" type="Label" parent="Background"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -58.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Money: 1000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UpgradeSlots" type="HBoxContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.453
+anchor_right = 1.0
+anchor_bottom = 0.659
+offset_top = -0.115997
+offset_bottom = -17.948
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="UpgradeSlot" parent="Background/UpgradeSlots" instance=ExtResource("4_2l2ip")]
+layout_mode = 2
+
+[node name="UpgradeSlot2" parent="Background/UpgradeSlots" instance=ExtResource("4_2l2ip")]
+layout_mode = 2
+
+[node name="UpgradeSlot3" parent="Background/UpgradeSlots" instance=ExtResource("4_2l2ip")]
+layout_mode = 2
+
+[node name="UpgradeSlot4" parent="Background/UpgradeSlots" instance=ExtResource("4_2l2ip")]
 layout_mode = 2
 
 [node name="TimerStartRound" type="Timer" parent="."]
