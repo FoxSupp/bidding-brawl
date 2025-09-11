@@ -9,6 +9,7 @@ signal died(player_id: int)
 @onready var camera: Camera2D = $Camera2D
 @onready var color_rect: ColorRect = $ColorRect
 @onready var collision: CollisionShape2D = $CollisionShape2D
+@onready var projectiles_root: Node = get_tree().root.get_node("/root/Game/Projectiles")
 
 const SPEED: float = 300.0
 const JUMP_VELOCITY: float = -400.0
@@ -16,7 +17,9 @@ const KILL_MONEY: int = 100
 const BULLET_SCENE = preload("res://scenes/bullet.tscn")
 
 var spectating_cam: Camera2D
-var _weapon_effects: Array[WeaponEffect]
+
+var shot_cooldown_reset: float = 1.0
+var shoot_cooldown: float = 0.0
 
 @export var health: int = 5
 @export var score: int = 0
@@ -29,7 +32,6 @@ func _ready() -> void:
 	spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
 	hp_bar.max_value = health
 	hp_bar.value = health
-	_load_persistent_weapon_effects()
 	
 	if input_synch.is_multiplayer_authority():
 		color_rect.color = Color.YELLOW
@@ -41,6 +43,10 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_multiplayer_authority() or dead:
 		return
+	
+	# Cooldown timer runterzählen
+	if shoot_cooldown > 0:
+		shoot_cooldown -= delta
 	
 	_handle_movement(delta)
 	_handle_aiming()
@@ -65,56 +71,35 @@ func _handle_aiming() -> void:
 func _handle_shooting() -> void:
 	if not input_synch.fire_input:
 		return
-	input_synch.fire_input = false
+	
+	# Prüfe ob Cooldown noch aktiv ist
+	if shoot_cooldown > 0:
+		return
+	
+	# Setze 1 Sekunde Cooldown
+	shoot_cooldown = shot_cooldown_reset
 	var muzzle: Marker2D = muzzle_rotation.get_node("Muzzle")
 	var dir := muzzle.global_position.direction_to(input_synch.mouse_pos).normalized()
 	var ctx := {
 		"muzzle_pos": muzzle.global_position,
 		"dir": dir,
 		"projectile_count": 1,
-		"spread_pattern": "none",
-		"spread_deg": 0.0,
 		"damage": 1,
 		"speed": 900.0,
-		"lifetime": 1.2,
+		"lifetime": 2,
 		"owner_peer_id": name.to_int()
 	}
 	
-	for e in _weapon_effects:
-		ctx = e.on_fire(ctx)
+	var projectile: Node = BULLET_SCENE.instantiate()
+	projectile.global_position = ctx.muzzle_pos
+	projectile.rotation = ctx.dir.angle()
+	projectile.dir = ctx.dir
+	projectile.owner_peer_id = name.to_int()
 	
-	var dirs: Array[Vector2] = []
-	match String(ctx.spread_pattern):
-		"symmetric":
-			var count := int(ctx.projectile_count)
-			if count <= 1:
-				dirs = [ctx.dir]
-			elif count == 2:
-				var a := deg_to_rad(float(ctx.spread_deg))
-				dirs = [ctx.dir.rotated(-a), ctx.dir.rotated(a)]
-			else:
-				var total = max(count, 1)
-				var span := 2.0 * float(ctx.spread_deg)
-				var step := 0.0 if total <= 1 else span / float(total - 1)
-				for i in range(total):
-					var offset := -float(ctx.spread_deg) + step * i
-					dirs.append(ctx.dir.rotated(deg_to_rad(offset)))
-		_:
-			dirs = [ctx.dir]
-	var projectiles_root := get_tree().root.get_node("Game/Projectiles")
-	for d in dirs:
-		var projectile: Node = BULLET_SCENE.instantiate()
-		projectile.global_position = ctx.muzzle_pos
-		projectile.rotation = d.angle()
-		projectile.dir = d
-		projectile.owner_peer_id = name.to_int()
-		
-		if "damage" in projectile: projectile.damage = ctx.damage
-		if "speed" in projectile: projectile.speed = ctx.speed
-		if "lifetime" in projectile: projectile.lifetime = ctx.lifetime
-		projectiles_root.add_child(projectile, true)
-	
-	await input_synch.get_tree().process_frame
+	if "damage" in projectile: projectile.damage = ctx.damage
+	if "speed" in projectile: projectile.speed = ctx.speed
+	if "lifetime" in projectile: projectile.lifetime = ctx.lifetime
+	projectiles_root.add_child(projectile, true)
 	
 func _handle_death() -> void:
 	dead = true
@@ -125,10 +110,6 @@ func _handle_death() -> void:
 		input_synch.set_multiplayer_authority(1)
 	
 	died.emit(name.to_int())
-
-func _load_persistent_weapon_effects() -> void:
-	var persistent_effects = SessionManager.getWeaponEffects(name.to_int())
-	_weapon_effects = persistent_effects.duplicate(true)
 
 func take_damage(damage: int, shooter_id: int) -> void:
 	if not is_multiplayer_authority():

@@ -14,17 +14,9 @@ func newPlayer(peer_id: int) -> void:
 		"wins": 0,
 		"winstreak": 0,
 		"losingstreak": 0,
-		"weapon_effects": []
 	}
 	rpc("_sync_players", player_stats)
 
-@rpc("authority", "call_local")
-func addWeaponEffect(peer_id: int, effect: WeaponEffect) -> void:
-	if not multiplayer.is_server(): return
-		
-	if player_stats.has(peer_id):
-		player_stats[peer_id]["weapon_effects"].append(effect)
-	rpc("_sync_players", player_stats)
 
 @rpc("any_peer", "call_local")
 func addMoney(peer_id: int, amount: int) -> void:
@@ -55,11 +47,3 @@ func win(peer_id: int) -> void:
 func _sync_players(new_stats: Dictionary):
 	player_stats = new_stats.duplicate(true)
 	emit_signal("player_stats_updated", new_stats)
-
-func getWeaponEffects(peer_id: int) -> Array[WeaponEffect]:
-	if player_stats.has(peer_id):
-		var effects: Array[WeaponEffect] = []
-		for effect in player_stats[peer_id]["weapon_effects"]:
-			effects.append(effect as WeaponEffect)
-		return effects
-	return []

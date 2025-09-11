@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="MultiShotEffect" load_steps=2 format=3 uid="uid://0jdpwk0ckbg0"]
-
-[ext_resource type="Script" uid="uid://bjeotymqdfvy2" path="res://scripts/upgrades/effects/multi_shot.gd" id="1_sdn6s"]
-
-[resource]
-script = ExtResource("1_sdn6s")
-spread_deg = 6.0
-metadata/_custom_type_script = "uid://bjeotymqdfvy2"

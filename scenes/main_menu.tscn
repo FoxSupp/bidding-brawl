@@ -20,6 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(800, 500)
 layout_mode = 2
 theme_override_constants/separation = 12
 
@@ -73,12 +74,15 @@ virtual_keyboard_type = 2
 [node name="Buttons" type="HBoxContainer" parent="CenterContainer/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
+alignment = 1
 
 [node name="HostButton" type="Button" parent="CenterContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Host"
 
 [node name="JoinButton" type="Button" parent="CenterContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Join"
 

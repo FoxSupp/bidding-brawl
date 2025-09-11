@@ -2,7 +2,6 @@ extends Control
 
 const PLAYER_STAT_BLOCK = preload("res://scenes/player_stat_block.tscn")
 const NEW_ROUND_TIMER: float = 3.0
-const UPGRADE_SLOT = preload("res://scenes/upgrade_slot.tscn")
 
 
 @export var ready_players: Array = []
@@ -11,9 +10,6 @@ const UPGRADE_SLOT = preload("res://scenes/upgrade_slot.tscn")
 @onready var player_stats: VBoxContainer = $Background/PlayerStats
 @onready var timer_start_round: Timer = $TimerStartRound
 @onready var label_timer_countdown: Label = $Background/LabelTimerCountdown
-@onready var upgrades: HBoxContainer = $Background/Upgrades
-
-@export var all_upgrades: Array[Resource]
 
 
 func _ready() -> void:
