@@ -56,7 +56,7 @@ text = "TEXT TEXT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="ButtonBid" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,4 +67,21 @@ action_mode = 0
 button_mask = 3
 flat = true
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[node name="LabelHighestBidder" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_bottom = 37.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 13
+text = "Highest Bidder:
+Fooxx"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="ButtonBid" to="." method="_on_button_pressed"]

@@ -5,9 +5,10 @@ var upgrade: UpgradeBase
 var bidding_manager
 var player_stats: Dictionary
 
-@onready var label_bid_amount: Label = $LabelBidAmount
-
 @onready var label_money: Label = get_tree().root.get_node("/root/BiddingMenu/Background/LabelBidMoney")
+@onready var label_bid_amount: Label = $LabelBidAmount
+@onready var label_highest_bidder: Label = $LabelHighestBidder
+@onready var button_bid: Button = $ButtonBid
 
 var slot_bids: Dictionary = {}
 
@@ -48,6 +49,13 @@ func _on_player_stats_received(peer_id: int, stats: Dictionary) -> void:
 	if peer_id == multiplayer.get_unique_id():
 		player_stats = stats
 
-
 func _update_money_ui() -> void:
 	label_money.text = "Money: " + str(player_stats["money"])
+
+@rpc("authority", "call_local")
+func update_highest_bid_ui(player_name: String) -> void:
+	
+	label_highest_bidder.show()
+	
+	label_highest_bidder.text = "Highest Bidder:\n" + player_name
+	button_bid.disabled = true

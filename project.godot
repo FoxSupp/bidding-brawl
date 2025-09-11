@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Bidding-Brawl"
-config/version="0.1.1"
+config/version="1.0.0"
 run/main_scene="uid://dxpt7g0id8eq6"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -21,11 +21,15 @@ config/icon="res://icon.svg"
 NetworkManager="*res://scripts/NetworkManager.gd"
 SessionManager="*res://scripts/SessionManager.gd"
 UpgradeManager="*res://scripts/upgrades/upgrade_manager.gd"
+BackgroundMusic="*res://scenes/background_music.tscn"
 
 [display]
 
-window/size/resizable=false
 window/stretch/mode="canvas_items"
+
+[gui]
+
+theme/custom_font="uid://m4ehvwoynuki"
 
 [input]
 

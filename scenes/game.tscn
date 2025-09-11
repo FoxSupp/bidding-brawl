@@ -1,31 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvqhqpcj8g465"]
+[gd_scene load_steps=13 format=3 uid="uid://dvqhqpcj8g465"]
 
 [ext_resource type="Script" uid="uid://dd32tbbhrppmk" path="res://scripts/game.gd" id="1_uwrxv"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cj0n"]
-size = Vector2(500, 30)
+[ext_resource type="Texture2D" uid="uid://cfgbpdrohkw8f" path="res://assets/background/Layer_0010_1.png" id="2_dinhu"]
+[ext_resource type="Texture2D" uid="uid://v2cwyvfx6tch" path="res://assets/background/Layer_0009_2.png" id="3_kvuet"]
+[ext_resource type="Texture2D" uid="uid://bpboujd7oktr" path="res://assets/background/Layer_0008_3.png" id="4_trtic"]
+[ext_resource type="Texture2D" uid="uid://ddjwxjkoyd8pp" path="res://assets/background/Layer_0006_4.png" id="5_ir15t"]
+[ext_resource type="Texture2D" uid="uid://do8qghfc4k8sp" path="res://assets/background/Layer_0005_5.png" id="6_ca42v"]
+[ext_resource type="Texture2D" uid="uid://btq1vkvhrqooh" path="res://assets/background/Layer_0007_Lights.png" id="7_rysoc"]
+[ext_resource type="Texture2D" uid="uid://bcia8llt73nqs" path="res://assets/background/Layer_0004_Lights.png" id="8_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://15o6kj5hvitr" path="res://assets/background/Layer_0003_6.png" id="9_264po"]
+[ext_resource type="Texture2D" uid="uid://cprw1bgabbjes" path="res://assets/background/Layer_0002_7.png" id="10_1kice"]
+[ext_resource type="Texture2D" uid="uid://bj60oy2cbp0k3" path="res://assets/background/Layer_0001_8.png" id="11_5newe"]
+[ext_resource type="Texture2D" uid="uid://2wtmggkpaqjt" path="res://assets/background/Layer_0000_9.png" id="12_37s47"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_uwrxv")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("RectangleShape2D_8cj0n")
-
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D/CollisionShape2D"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -15.0
-offset_right = 250.0
-offset_bottom = 15.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.408329, 0.408329, 0.408329, 1)
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bi1pll6ib7wfv")
@@ -39,21 +28,44 @@ spawn_path = NodePath("../Projectiles")
 
 [node name="Projectiles" type="Node" parent="."]
 
-[node name="SpawnPositions" type="Node2D" parent="."]
-
-[node name="1" type="Marker2D" parent="SpawnPositions"]
-position = Vector2(-177, -72)
-
-[node name="2" type="Marker2D" parent="SpawnPositions"]
-position = Vector2(-68, -70)
-
-[node name="3" type="Marker2D" parent="SpawnPositions"]
-position = Vector2(47, -70)
-
-[node name="4" type="Marker2D" parent="SpawnPositions"]
-position = Vector2(166, -74)
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -129)
 enabled = false
 zoom = Vector2(0.5, 0.5)
+
+[node name="Background" type="Node2D" parent="."]
+position = Vector2(0, -759)
+scale = Vector2(3, 3)
+
+[node name="Layer00101" type="Sprite2D" parent="Background"]
+texture = ExtResource("2_dinhu")
+
+[node name="Layer00092" type="Sprite2D" parent="Background"]
+texture = ExtResource("3_kvuet")
+
+[node name="Layer00083" type="Sprite2D" parent="Background"]
+texture = ExtResource("4_trtic")
+
+[node name="Layer00064" type="Sprite2D" parent="Background"]
+texture = ExtResource("5_ir15t")
+
+[node name="Layer00055" type="Sprite2D" parent="Background"]
+texture = ExtResource("6_ca42v")
+
+[node name="Layer0007Lights" type="Sprite2D" parent="Background"]
+texture = ExtResource("7_rysoc")
+
+[node name="Layer0004Lights" type="Sprite2D" parent="Background"]
+texture = ExtResource("8_ssvqc")
+
+[node name="Layer00036" type="Sprite2D" parent="Background"]
+texture = ExtResource("9_264po")
+
+[node name="Layer00027" type="Sprite2D" parent="Background"]
+texture = ExtResource("10_1kice")
+
+[node name="Layer00018" type="Sprite2D" parent="Background"]
+texture = ExtResource("11_5newe")
+
+[node name="Layer00009" type="Sprite2D" parent="Background"]
+texture = ExtResource("12_37s47")

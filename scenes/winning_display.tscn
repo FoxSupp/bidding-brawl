@@ -1,0 +1,352 @@
+[gd_scene load_steps=3 format=3 uid="uid://c20y7aq3on3w2"]
+
+[ext_resource type="Script" uid="uid://dv7mjih11n3wg" path="res://scripts/winning_display.gd" id="1_l4ipi"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_l4ipi"]
+properties/0/path = NodePath("CenterContainer/MainPanel/VBoxContainer/WinnerNameLabel:text")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid/KillsValue:text")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid/UpgradesValue:text")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="WinningDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l4ipi")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.12, 1)
+
+[node name="StarField" type="Control" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Star1" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 80.0
+offset_right = 154.0
+offset_bottom = 84.0
+color = Color(1, 1, 0.8, 0.8)
+
+[node name="Star2" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 120.0
+offset_right = 302.0
+offset_bottom = 122.0
+color = Color(1, 1, 0.9, 0.6)
+
+[node name="Star3" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 50.0
+offset_right = 504.0
+offset_bottom = 54.0
+color = Color(1, 1, 0.7, 0.9)
+
+[node name="Star4" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 750.0
+offset_top = 180.0
+offset_right = 752.0
+offset_bottom = 182.0
+color = Color(1, 1, 1, 0.7)
+
+[node name="Star5" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 90.0
+offset_right = 904.0
+offset_bottom = 94.0
+color = Color(1, 1, 0.8, 0.8)
+
+[node name="Star6" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 250.0
+offset_right = 82.0
+offset_bottom = 252.0
+color = Color(1, 1, 0.9, 0.5)
+
+[node name="Star7" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 300.0
+offset_right = 404.0
+offset_bottom = 304.0
+color = Color(1, 1, 0.7, 0.8)
+
+[node name="Star8" type="ColorRect" parent="Background/StarField"]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 350.0
+offset_right = 652.0
+offset_bottom = 352.0
+color = Color(1, 1, 1, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="Panel" parent="CenterContainer"]
+modulate = Color(1, 1, 1, 0.95)
+custom_minimum_size = Vector2(800, 630)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="TopSpacer" type="Control" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="VictoryLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "🏆 VICTORY! 🏆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WinnerNameLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Player Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CongratulationsLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Congratulations on your victory!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DecorationContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="LeftTrophy" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/DecorationContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "🏆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterCrown" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/DecorationContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 84
+text = "👑"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightTrophy" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/DecorationContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "🏆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StatsTitle" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Final Stats"
+horizontal_alignment = 1
+
+[node name="StatsPanel" type="Panel" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="KillsLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+layout_mode = 2
+text = "Eliminations:"
+horizontal_alignment = 1
+
+[node name="KillsValue" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="UpgradesLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+layout_mode = 2
+text = "Upgrades Won:"
+horizontal_alignment = 1
+
+[node name="UpgradesValue" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="MoneyLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+visible = false
+layout_mode = 2
+text = "Money Spent:"
+horizontal_alignment = 1
+
+[node name="MoneyValue" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/StatsContainer/StatsPanel/StatsGrid"]
+visible = false
+layout_mode = 2
+text = "$0"
+horizontal_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Play Again"
+
+[node name="MainMenuButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Main Menu"
+
+[node name="BottomSpacer" type="Control" parent="CenterContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="ParticleEffect" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Confetti1" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 100.0
+offset_right = 210.0
+offset_bottom = 110.0
+rotation = 0.785398
+color = Color(1, 0.8, 0, 1)
+
+[node name="Confetti2" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 150.0
+offset_right = 360.0
+offset_bottom = 160.0
+rotation = 1.5708
+color = Color(0, 0.8, 1, 1)
+
+[node name="Confetti3" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 80.0
+offset_right = 510.0
+offset_bottom = 90.0
+rotation = 2.35619
+color = Color(1, 0, 0.8, 1)
+
+[node name="Confetti4" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 200.0
+offset_right = 660.0
+offset_bottom = 210.0
+rotation = 0.523599
+color = Color(0.8, 1, 0, 1)
+
+[node name="Confetti5" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 800.0
+offset_top = 120.0
+offset_right = 810.0
+offset_bottom = 130.0
+rotation = 1.0472
+color = Color(1, 0.4, 0, 1)
+
+[node name="Confetti6" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 300.0
+offset_right = 110.0
+offset_bottom = 310.0
+rotation = 1.8326
+color = Color(0.4, 0, 1, 1)
+
+[node name="Confetti7" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 750.0
+offset_top = 350.0
+offset_right = 760.0
+offset_bottom = 360.0
+rotation = 2.61799
+color = Color(1, 0, 0.4, 1)
+
+[node name="Confetti8" type="ColorRect" parent="ParticleEffect"]
+layout_mode = 0
+offset_left = 450.0
+offset_top = 320.0
+offset_right = 460.0
+offset_bottom = 330.0
+rotation = 0.261799
+color = Color(0, 1, 0.4, 1)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_l4ipi")
+
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/ButtonContainer/PlayAgainButton" to="." method="_on_play_again_button_pressed"]
+[connection signal="pressed" from="CenterContainer/MainPanel/VBoxContainer/ButtonContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

@@ -1,6 +1,7 @@
 extends Node
 
 var player_stats = {}
+var winner = {}
 
 signal player_stats_received(peer_id: int, stats: Dictionary)
 
@@ -9,6 +10,7 @@ func newPlayer(peer_id: int) -> void:
 	player_stats[peer_id] = {
 		"username": NetworkManager.get_username(peer_id),
 		"money": 0,
+		"kills": 0,
 		"wins": 0,
 		"winstreak": 0,
 		"losingstreak": 0,
@@ -18,11 +20,14 @@ func newPlayer(peer_id: int) -> void:
 func add_money(peer_id: int, amount: int) -> void:
 	if not multiplayer.is_server(): return
 
-	print("MONEY ADDED: ", amount)
-		
 	if player_stats.has(peer_id):
 		player_stats[peer_id]["money"] += amount
 	rpc_id(peer_id, "receive_player_stats", peer_id, player_stats[peer_id])
+
+func add_kill(peer_id: int) -> void:
+	if not multiplayer.is_server(): return
+	if player_stats.has(peer_id):
+		player_stats[peer_id]["kills"] += 1
 
 func win(peer_id: int) -> void:
 	if not multiplayer.is_server(): return
@@ -43,6 +48,12 @@ func add_upgrade(peer_id: int, upgrade_id: String) -> void:
 	
 	if player_stats.has(peer_id):
 		player_stats[peer_id]["upgrades"].append(upgrade_id)
+
+func clear_session() -> void:
+	player_stats.clear()
+	winner = {}
+
+
 
 @rpc("any_peer", "call_local")
 func get_player_stats(peer_id: int):
