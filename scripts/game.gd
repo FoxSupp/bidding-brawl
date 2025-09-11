@@ -1,18 +1,59 @@
 extends Node2D
 
-@onready var spawn_positions: Node2D = $SpawnPositions
+var spawn_positions: Node
+
 @onready var players: Node = $Players
 
 const PLAYER_SCENE = preload("res://scenes/player.tscn")
 
+var win_count: int = 2
+
 func _ready() -> void:
-	NetworkManager.all_in_game.connect(_spawn_all_players)
+	
+	# All clients (including server) connect to the signal
+	if not NetworkManager.arena_selected.is_connected(_load_arena):
+		NetworkManager.arena_selected.connect(_load_arena)
+	
+	# Connect to all_in_game signal for both arena selection and player spawning
+	NetworkManager.all_in_game.connect(_on_all_players_in_game)
 	NetworkManager.rpc_id(1, "request_set_self_in_game", true)
 
-func _spawn_all_players() -> void:
+func _on_all_players_in_game() -> void:
 	if not multiplayer.is_server():
 		return
 	
+	# First select and sync the arena to all players
+	_select_and_sync_arena()
+	# Then spawn all players (with a small delay to ensure arena is loaded)
+	call_deferred("_spawn_all_players")
+
+func _select_and_sync_arena() -> void:
+	var arena_scenes = []
+	var dir = DirAccess.open("res://scenes/arenas")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".tscn"):
+				arena_scenes.append("res://scenes/arenas/" + file_name)
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	
+	if arena_scenes.size() > 0:
+		var random_arena_path = arena_scenes[randi() % arena_scenes.size()]
+		# Sync arena selection to all clients (including server via call_local)
+		NetworkManager.rpc("sync_arena_selection", random_arena_path)
+
+func _load_arena(arena_path: String) -> void:
+	var arena_scene = load(arena_path)
+	if arena_scene:
+		var arena_instance = arena_scene.instantiate()
+		add_child(arena_instance)
+		spawn_positions = arena_instance.get_node("SpawnPositions")
+	else:
+		print("ERROR: Failed to load arena scene: ", arena_path)
+
+func _spawn_all_players() -> void:
 	var spawn_points: Array[Node] = spawn_positions.get_children()
 	
 	_add_players_to_session()
@@ -31,7 +72,7 @@ func _spawn_all_players() -> void:
 func _add_players_to_session() -> void:
 	for peer_id in NetworkManager.players:
 		if not SessionManager.player_stats.has(peer_id):
-			SessionManager.rpc("newPlayer", peer_id)
+			SessionManager.newPlayer(peer_id)
 
 func add_score(score: int, shooter_id: int) -> void:
 	
@@ -46,7 +87,7 @@ func _on_player_died(_player_id: int) -> void:
 		_end_game(alive_players[0].name.to_int())
 
 func _end_game(winner_id: int):
-	SessionManager.rpc("win", winner_id)
+	SessionManager.win(winner_id)
 	
 	# Clean up all bullets before despawning players to prevent multiplayer despawn errors
 	var projectiles_node = get_node_or_null("Projectiles")
@@ -64,10 +105,12 @@ func _end_game(winner_id: int):
 	# Despawn all players safely
 	for player in player_list:
 		if is_instance_valid(player):
-			var input_synch_node = player.input_synch.get_node_or_null("InputSynch")
-			if input_synch_node and is_instance_valid(input_synch_node):
-				input_synch_node.public_visibility = false
-			player.despawn_player()
+			# Check if input_synch exists and is valid before accessing its children
+			if is_instance_valid(player.input_synch) and player.input_synch.has_node("InputSynch"):
+				var input_synch_node = player.input_synch.get_node("InputSynch")
+				if is_instance_valid(input_synch_node):
+					input_synch_node.public_visibility = false
+			player.call_deferred("despawn_player")
 	
 	# Update NetworkManager after despawning
 	for player_id in player_ids:
@@ -76,4 +119,8 @@ func _end_game(winner_id: int):
 	NetworkManager.game_started = false
 	await get_tree().create_timer(1).timeout
 	if multiplayer.is_server():
-		NetworkManager.rpc("change_to_bidding")
+		if SessionManager.player_stats[winner_id]["wins"] >= win_count:
+			SessionManager.winner = SessionManager.player_stats[winner_id]
+			NetworkManager.rpc("change_to_winning")
+		else:
+			NetworkManager.rpc("change_to_bidding")

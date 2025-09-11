@@ -15,7 +15,6 @@ func apply_upgrade(player: Player, upgrade_id: String) -> bool:
 	if upgrade:
 		#upgrade.apply(player)
 		player.upgrades.append(upgrade)
-		print("Applied upgrade: " + upgrade_id + " to player " + str(player.name))
 		return true
 	return false
 

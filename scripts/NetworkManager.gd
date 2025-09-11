@@ -4,11 +4,13 @@ signal connection_status_changed(status: String)
 signal error(message: String)
 signal players_updated(players: Dictionary)
 signal all_in_game
+signal arena_selected(arena_path: String)
 
 const MENU_SCENE = preload("res://scenes/main_menu.tscn")
 const LOBBY_SCENE = preload("res://scenes/lobby.tscn")
 const GAME_SCENE = preload("res://scenes/game.tscn")
 const BIDDING_SCENE = preload("res://scenes/bidding_menu.tscn")
+const WINNING_SCENE = preload("res://scenes/winning_display.tscn")
 const MAX_PLAYERS: int = 32
 
 var player_name: String = ""
@@ -133,6 +135,14 @@ func change_to_bidding() -> void:
 	_change_scene(BIDDING_SCENE)
 
 @rpc("authority", "call_local")
+func change_to_winning() -> void:
+	_change_scene(WINNING_SCENE)
+
+@rpc("authority", "call_local")
+func change_to_lobby() -> void:
+	_change_scene(LOBBY_SCENE)
+
+@rpc("authority", "call_local")
 func start_game() -> void:
 	_change_scene(GAME_SCENE)
 
@@ -169,7 +179,7 @@ func request_set_self_in_game(value: bool) -> void:
 func set_player_in_game(player_id: int, value: bool) -> void:
 	if not multiplayer.is_server():
 		return
-	players[player_id] = {"in_game": value}
+	players[player_id].in_game = value
 	rpc("sync_players", players)
 
 @rpc("any_peer")
@@ -198,6 +208,9 @@ func version_accepted() -> void:
 	print("Version check passed, proceeding with registration")
 	rpc_id(1, "register_player", player_name)
 
+@rpc("authority", "call_local")
+func sync_arena_selection(arena_path: String) -> void:
+	emit_signal("arena_selected", arena_path)
 
 func _broadcast_players() -> void:
 	rpc("sync_players", players)

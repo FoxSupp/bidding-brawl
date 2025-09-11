@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cqx3hfpouk1br"]
+[gd_scene load_steps=5 format=3 uid="uid://cqx3hfpouk1br"]
 
 [ext_resource type="Script" uid="uid://dul3lebrid3nx" path="res://scripts/bullet.gd" id="1_mkf8s"]
+[ext_resource type="Texture2D" uid="uid://ycomchgwsecu" path="res://assets/sprites/sword.png" id="2_y25gk"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_h1aey"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y25gk"]
+radius = 4.0
+height = 20.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mkf8s"]
 properties/0/path = NodePath(".:position")
@@ -26,23 +29,13 @@ contact_monitor = true
 max_contacts_reported = 5
 script = ExtResource("1_mkf8s")
 
-[node name="Sprite" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0.184314, 0, 1)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("2_y25gk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-shape = SubResource("CircleShape2D_h1aey")
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_y25gk")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_mkf8s")

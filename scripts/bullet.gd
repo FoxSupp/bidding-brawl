@@ -13,6 +13,10 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
+		# Rotate the bullet to match its current movement direction (falling or rising)
+	if linear_velocity.length() > 0:
+		rotation = linear_velocity.angle()
+	return
 	lifetime -= delta
 	if lifetime <= 0:
 		call_deferred("queue_free")

@@ -3,22 +3,25 @@ extends CharacterBody2D
 
 signal died(player_id: int)
 
+@onready var shoot_sound: AudioStreamPlayer2D = $ShootSound
+@onready var jump_sound: AudioStreamPlayer2D = $JumpSound
+
+@onready var sprite: AnimatedSprite2D = $Sprite
 @onready var input_synch: Node2D = $InputSynch
 @onready var muzzle_rotation: Node2D = $MuzzleRotation
 @onready var hp_bar: ProgressBar = $HP/HPBar
 @onready var camera: Camera2D = $Camera2D
-@onready var color_rect: ColorRect = $ColorRect
 @onready var collision: CollisionShape2D = $CollisionShape2D
 @onready var projectiles_root: Node = get_tree().root.get_node("/root/Game/Projectiles")
 
 const BASE_SPEED: float = 300.0
-const JUMP_VELOCITY: float = -400.0
+const JUMP_VELOCITY: float = -500.0
 const KILL_MONEY: int = 100
 const BULLET_SCENE = preload("res://scenes/bullet.tscn")
 
 var spectating_cam: Camera2D
 
-var shot_cooldown_reset: float = 1.0
+var shot_cooldown_reset: float = 0.5
 var shoot_cooldown: float = 0.0
 
 """ Upgrade Variables """
@@ -33,6 +36,10 @@ var upgrades: Array[UpgradeBase] = []
 @export var score: int = 0
 @export var dead: bool = false
 
+# Animation state tracking
+var is_jumping: bool = false
+var is_falling: bool = false
+
 func _enter_tree() -> void:
 	get_node("InputSynch").set_multiplayer_authority(name.to_int())
 
@@ -43,15 +50,18 @@ func _ready() -> void:
 		#UpgradeManager.apply_upgrade(self, "upgrade_multishot")
 		pass
 	
-	_init_upgrades()
+	if multiplayer.is_server():
+		_init_upgrades()
+		health += upgrade_max_health
+		hp_bar.max_value = health
+		hp_bar.value = health
 	
-	spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
-	health += upgrade_max_health
-	hp_bar.max_value = health
-	hp_bar.value = health
 	
 	if input_synch.is_multiplayer_authority():
-		color_rect.color = Color.YELLOW
+		spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
+	
+	# Connect the animation finished signal
+	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	if input_synch.is_multiplayer_authority():
@@ -75,12 +85,42 @@ func _physics_process(delta: float) -> void:
 func _handle_movement(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+		
+		# Only start fall animation if we're not jumping and actually falling
+		if velocity.y > 0 and not is_jumping:
+			if not is_falling:
+				is_falling = true
+				sprite.play("fall")
+	else:
+		# Reset states when touching ground
+		if is_jumping or is_falling:
+			is_jumping = false
+			is_falling = false
 	
 	if input_synch.jump_input and is_on_floor():
+		is_jumping = true
+		is_falling = false
+		sprite.play("jump")
 		velocity.y = JUMP_VELOCITY
+		if input_synch.is_multiplayer_authority():
+			jump_sound.play()
 	
 	var current_speed = BASE_SPEED + upgrade_speed_bonus
 	velocity.x = input_synch.move_input * current_speed if input_synch.move_input else move_toward(velocity.x, 0, current_speed)
+	
+	# Handle sprite flipping
+	if input_synch.move_input < 0:
+		sprite.flip_h = true
+	elif input_synch.move_input > 0:
+		sprite.flip_h = false
+	
+	# Only play walk/idle animations if not jumping or falling
+	if is_on_floor() and not is_jumping:
+		if input_synch.move_input != 0:
+			sprite.play("walk")
+		else:
+			sprite.play("idle")
+	
 	move_and_slide()
 
 func _handle_aiming() -> void:
@@ -117,6 +157,10 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	if "speed" in projectile: projectile.speed = 900
 	if "lifetime" in projectile: projectile.lifetime = 2
 	projectiles_root.add_child(projectile, true)
+	if !input_synch.is_multiplayer_authority():
+		shoot_sound.volume_db = -16
+		shoot_sound.pitch_scale = 0.70
+	shoot_sound.play()
 
 func _handle_death() -> void:
 	dead = true
@@ -143,17 +187,31 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	
 	# TODO: implement Fix to not award 2 times Money if killed with 2 Bullets due to Multishot
 	if health <= 0 and shooter_id != name.to_int():
-		SessionManager.rpc("addMoney", shooter_id, KILL_MONEY)
+		SessionManager.add_money(shooter_id, KILL_MONEY)
+		SessionManager.add_kill(shooter_id)
+
+func _on_animation_finished() -> void:
+	# When jump animation finishes, check if we're still in the air
+	if sprite.animation == "jump":
+		is_jumping = false
+		if not is_on_floor():
+			is_falling = true
+			sprite.play("fall")
+		else:
+			# We landed, play appropriate ground animation
+			if input_synch.move_input != 0:
+				sprite.play("walk")
+			else:
+				sprite.play("idle")
 
 func despawn_player() -> void:
 	dead = true
 	if not is_multiplayer_authority():
 		return
-	for upgrade in upgrades:
-		SessionManager.rpc("addUpgrade", name.to_int(), upgrade.id)
 	# Safe node access to prevent null reference errors
-	var input_synch_node = input_synch.get_node_or_null("InputSynch")
-	if input_synch_node and is_instance_valid(input_synch_node):
-		input_synch_node.public_visibility = false
+	if is_instance_valid(input_synch) and input_synch.has_node("InputSynch"):
+		var input_synch_node = input_synch.get_node("InputSynch")
+		if is_instance_valid(input_synch_node):
+			input_synch_node.public_visibility = false
 	await get_tree().process_frame
 	queue_free()
