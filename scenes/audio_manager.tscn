@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwou3ic4qgrw3"]
+
+[ext_resource type="Script" uid="uid://betf6gtoqqdx6" path="res://scripts/autoload/audio_manager.gd" id="1_3asnw"]
+[ext_resource type="AudioStream" uid="uid://bi6jic6as62aw" path="res://assets/music/6. Energizer Cult.wav" id="1_8qd8g"]
+[ext_resource type="AudioStream" uid="uid://iavdmj8yps6v" path="res://assets/sounds/blipSelect.wav" id="3_m6ggh"]
+
+[node name="AudioManager" type="Node"]
+script = ExtResource("1_3asnw")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_8qd8g")
+volume_db = -20.0
+autoplay = true
+bus = &"Music"
+
+[node name="AudioButtonClick" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_m6ggh")
+volume_db = -5.0
+bus = &"SoundEffect"
