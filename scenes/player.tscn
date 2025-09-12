@@ -267,8 +267,10 @@ texture = ExtResource("4_tuyoq")
 stream = ExtResource("3_qhqgy")
 volume_db = -10.0
 pitch_scale = 0.78
+bus = &"SoundEffect"
 
 [node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_dqkch")
 volume_db = -20.0
 pitch_scale = 1.4
+bus = &"SoundEffect"
