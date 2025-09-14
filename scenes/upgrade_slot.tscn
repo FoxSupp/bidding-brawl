@@ -1,60 +1,126 @@
-[gd_scene load_steps=3 format=3 uid="uid://4itayjujs3an"]
+[gd_scene load_steps=6 format=3 uid="uid://4itayjujs3an"]
 
 [ext_resource type="Script" uid="uid://5bavr2eqm6dr" path="res://scripts/upgrade_slot.gd" id="1_aahc8"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bijba"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.4, 0.8, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bid_amount"]
+bg_color = Color(0.2, 0.6, 0.9, 0.2)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_name"]
+bg_color = Color(0.8, 0.6, 0.2, 0.2)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_highest_bidder"]
+bg_color = Color(0.2, 0.8, 0.3, 0.3)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="UpgradeSlot" type="Control"]
 z_index = 5
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(120, 140)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1052.0
-offset_bottom = -548.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_default_cursor_shape = 2
 script = ExtResource("1_aahc8")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bijba")
+theme_override_styles/panel = SubResource("StyleBoxFlat_background")
 
-[node name="LabelBidAmount" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="Background"]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -27.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BidAmountContainer" type="Panel" parent="Background/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bid_amount")
+
+[node name="LabelBidAmount" type="Label" parent="Background/VBoxContainer/BidAmountContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 4.0
+offset_right = -6.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 18
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LabelName" type="Label" parent="."]
+[node name="VSeparator" type="VSeparator" parent="Background/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NameContainer" type="Panel" parent="Background/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_name")
+
+[node name="LabelName" type="Label" parent="Background/VBoxContainer/NameContainer"]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = 15.0
-offset_bottom = 38.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 4.0
+offset_right = -6.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-text = "TEXT TEXT"
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Upgrade Name"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="ButtonBid" type="Button" parent="."]
 layout_mode = 1
@@ -67,18 +133,34 @@ action_mode = 0
 button_mask = 3
 flat = true
 
-[node name="LabelHighestBidder" type="Label" parent="."]
+[node name="HighestBidderContainer" type="Panel" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -2.0
-offset_bottom = 37.0
+offset_left = 5.0
+offset_top = -35.0
+offset_right = -5.0
+offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_font_sizes/font_size = 13
+theme_override_styles/panel = SubResource("StyleBoxFlat_highest_bidder")
+
+[node name="LabelHighestBidder" type="Label" parent="HighestBidderContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = -4.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 12
 text = "Highest Bidder:
 Fooxx"
 horizontal_alignment = 1

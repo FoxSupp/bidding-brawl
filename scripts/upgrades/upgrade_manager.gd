@@ -7,7 +7,8 @@ func _ready() -> void:
 		UpgradeFirerate.new(),
 		UpgradeMultishot.new(),
 		UpgradeHealth.new(),
-		UpgradeSpeed.new()
+		UpgradeSpeed.new(),
+		UpgradeJumpHeight.new()
 	]
 
 func apply_upgrade(player: Player, upgrade_id: String) -> bool:

@@ -25,7 +25,7 @@ func _update_player_display(_players: Dictionary) -> void:
 			var player_slot: Node = PLAYER_SLOT.instantiate()
 			v_box_container.add_child(player_slot)
 			
-			var player_name_node: Label = player_slot.get_node_or_null("Background/PlayerName")
+			var player_name_node: Label = player_slot.get_node_or_null("Background/HBoxContainer/PlayerName")
 			if player_name_node:
 				player_name_node.text = player_data.get("username", "Unknown")
 

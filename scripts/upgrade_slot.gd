@@ -6,8 +6,8 @@ var bidding_manager
 var player_stats: Dictionary
 
 @onready var label_money: Label = get_tree().root.get_node("/root/BiddingMenu/Background/LabelBidMoney")
-@onready var label_bid_amount: Label = $LabelBidAmount
-@onready var label_highest_bidder: Label = $LabelHighestBidder
+@onready var label_bid_amount: Label = $Background/VBoxContainer/BidAmountContainer/LabelBidAmount
+@onready var label_highest_bidder: Label = $HighestBidderContainer/LabelHighestBidder
 @onready var button_bid: Button = $ButtonBid
 
 var slot_bids: Dictionary = {}

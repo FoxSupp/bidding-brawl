@@ -92,12 +92,12 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="HostButton" type="Button" parent="MultiplayerMenu/VBox/Buttons"]
+[node name="HostButton" type="Button" parent="MultiplayerMenu/VBox/Buttons" groups=["sound_blip"]]
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Host"
 
-[node name="JoinButton" type="Button" parent="MultiplayerMenu/VBox/Buttons"]
+[node name="JoinButton" type="Button" parent="MultiplayerMenu/VBox/Buttons" groups=["sound_blip"]]
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Join"
@@ -105,7 +105,7 @@ text = "Join"
 [node name="Control" type="CenterContainer" parent="MultiplayerMenu/VBox"]
 layout_mode = 2
 
-[node name="ButtonBack" type="Button" parent="MultiplayerMenu/VBox/Control"]
+[node name="ButtonBack" type="Button" parent="MultiplayerMenu/VBox/Control" groups=["sound_blip"]]
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "BACK"
@@ -141,25 +141,25 @@ offset_right = 765.0
 offset_bottom = 611.0
 theme_override_constants/separation = 32
 
-[node name="ButtonMultiplayer" type="Button" parent="MainMenu/VBoxContainer"]
+[node name="ButtonMultiplayer" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Multiplayer"
 
-[node name="ButtonOptions" type="Button" parent="MainMenu/VBoxContainer"]
+[node name="ButtonOptions" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Options"
 
-[node name="ButtonCredits" type="Button" parent="MainMenu/VBoxContainer"]
+[node name="ButtonCredits" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Credits"
 
-[node name="ButtonQuitGame" type="Button" parent="MainMenu/VBoxContainer"]
+[node name="ButtonQuitGame" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
@@ -233,7 +233,7 @@ offset_bottom = -1.0
 text = "Sound Effect Volume"
 horizontal_alignment = 1
 
-[node name="ButtonBack" type="Button" parent="OptionsMenu/VBoxContainer"]
+[node name="ButtonBack" type="Button" parent="OptionsMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "Back"
@@ -287,7 +287,7 @@ offset_bottom = -108.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ButtonBack" type="Button" parent="CreditsMenu/CenterContainer"]
+[node name="ButtonBack" type="Button" parent="CreditsMenu/CenterContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Back"

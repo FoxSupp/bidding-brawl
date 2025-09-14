@@ -163,27 +163,33 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("MuzzleRotation:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:health")
+properties/2/path = NodePath(".:score")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:score")
+properties/3/path = NodePath(".:visible")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath(".:visible")
+properties/4/path = NodePath(".:dead")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath(".:dead")
+properties/5/path = NodePath("HP/HPBar:value")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("HP/HPBar:value")
+properties/6/path = NodePath("HP/HPBar:max_value")
 properties/6/spawn = true
 properties/6/replication_mode = 1
-properties/7/path = NodePath("HP/HPBar:max_value")
+properties/7/path = NodePath("Sprite:animation")
 properties/7/spawn = true
 properties/7/replication_mode = 1
-properties/8/path = NodePath("Sprite:animation")
+properties/8/path = NodePath("LabelPlayername:text")
 properties/8/spawn = true
 properties/8/replication_mode = 1
+properties/9/path = NodePath(".:max_health")
+properties/9/spawn = true
+properties/9/replication_mode = 1
+properties/10/path = NodePath(".:current_health")
+properties/10/spawn = true
+properties/10/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 properties/0/path = NodePath("InputSynch:move_input")
@@ -201,7 +207,24 @@ properties/3/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_3vyb7")
-health = 1
+
+[node name="LabelPlayername" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -44.0
+offset_right = 89.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 16
+text = "123456789012"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HP" type="Node2D" parent="."]
 position = Vector2(0, -33)
@@ -225,6 +248,15 @@ max_value = 5.0
 step = 1.0
 value = 5.0
 show_percentage = false
+
+[node name="LabelHP" type="Label" parent="HP"]
+offset_left = -109.0
+offset_top = -13.5
+offset_right = 109.0
+offset_bottom = 13.5
+text = "1000 / 1000"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -4)

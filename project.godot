@@ -27,6 +27,10 @@ AudioManager="*res://scenes/audio_manager.tscn"
 
 window/stretch/mode="canvas_items"
 
+[global_group]
+
+sound_blip="All buttons with this Group make the Blip Sound"
+
 [gui]
 
 theme/custom_font="uid://m4ehvwoynuki"
