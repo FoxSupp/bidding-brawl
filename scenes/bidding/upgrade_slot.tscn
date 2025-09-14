@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://4itayjujs3an"]
 
-[ext_resource type="Script" uid="uid://5bavr2eqm6dr" path="res://scripts/upgrade_slot.gd" id="1_aahc8"]
+[ext_resource type="Script" uid="uid://5bavr2eqm6dr" path="res://scripts/bidding/upgrade_slot.gd" id="1_aahc8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
 bg_color = Color(0.1, 0.1, 0.15, 0.95)

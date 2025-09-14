@@ -8,6 +8,7 @@ var player_stats: Dictionary
 @onready var label_money: Label = get_tree().root.get_node("/root/BiddingMenu/Background/LabelBidMoney")
 @onready var label_bid_amount: Label = $Background/VBoxContainer/BidAmountContainer/LabelBidAmount
 @onready var label_highest_bidder: Label = $HighestBidderContainer/LabelHighestBidder
+@onready var highest_bidder_container: Panel = $HighestBidderContainer
 @onready var button_bid: Button = $ButtonBid
 
 var slot_bids: Dictionary = {}
@@ -55,7 +56,7 @@ func _update_money_ui() -> void:
 @rpc("authority", "call_local")
 func update_highest_bid_ui(player_name: String) -> void:
 	
-	label_highest_bidder.show()
+	highest_bidder_container.show()
 	
 	label_highest_bidder.text = "Highest Bidder:\n" + player_name
 	button_bid.disabled = true

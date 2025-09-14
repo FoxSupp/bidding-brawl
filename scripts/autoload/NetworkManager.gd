@@ -6,11 +6,11 @@ signal players_updated(players: Dictionary)
 signal all_in_game
 signal arena_selected(arena_path: String)
 
-const MENU_SCENE = preload("res://scenes/main_menu.tscn")
+const MENU_SCENE = preload("res://scenes/menu/main_menu.tscn")
 const LOBBY_SCENE = preload("res://scenes/lobby.tscn")
 const GAME_SCENE = preload("res://scenes/game.tscn")
-const BIDDING_SCENE = preload("res://scenes/bidding_menu.tscn")
-const WINNING_SCENE = preload("res://scenes/winning_display.tscn")
+const BIDDING_SCENE = preload("res://scenes/bidding/bidding_menu.tscn")
+const WINNING_SCENE = preload("res://scenes/menu/winning_display.tscn")
 const MAX_PLAYERS: int = 32
 
 var player_name: String = ""

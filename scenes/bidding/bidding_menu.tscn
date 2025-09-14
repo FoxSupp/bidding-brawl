@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bnwcqcma1nw5y"]
 
-[ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding_menu.gd" id="1_6fnxy"]
-[ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/player_stat_block.tscn" id="2_2qcm0"]
-[ext_resource type="Script" uid="uid://bp1b68d3621ng" path="res://scripts/bidding_manager.gd" id="2_e2fi0"]
-[ext_resource type="PackedScene" uid="uid://4itayjujs3an" path="res://scenes/upgrade_slot.tscn" id="4_2l2ip"]
+[ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding/bidding_menu.gd" id="1_6fnxy"]
+[ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/bidding/player_stat_block.tscn" id="2_2qcm0"]
+[ext_resource type="Script" uid="uid://bp1b68d3621ng" path="res://scripts/bidding/bidding_manager.gd" id="2_e2fi0"]
+[ext_resource type="PackedScene" uid="uid://4itayjujs3an" path="res://scenes/bidding/upgrade_slot.tscn" id="4_2l2ip"]
 
 [node name="BiddingMenu" type="Control"]
 layout_mode = 3

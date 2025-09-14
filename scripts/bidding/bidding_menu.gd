@@ -1,7 +1,7 @@
 extends Control
 
-const PLAYER_STAT_BLOCK = preload("res://scenes/player_stat_block.tscn")
-const UPGRADE_SLOT = preload("res://scenes/upgrade_slot.tscn")
+const PLAYER_STAT_BLOCK = preload("res://scenes/bidding/player_stat_block.tscn")
+const UPGRADE_SLOT = preload("res://scenes/bidding/upgrade_slot.tscn")
 const NEW_ROUND_TIMER: float = 3.0
 
 
