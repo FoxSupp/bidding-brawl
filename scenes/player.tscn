@@ -249,6 +249,7 @@ replication_config = SubResource("SceneReplicationConfig_qhqgy")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = false
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 drag_vertical_enabled = true
 

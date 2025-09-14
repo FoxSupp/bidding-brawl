@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://xb1o5ibe6oh1"]
+
+[node name="SpawnPositions" type="Node"]
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-576, 288)
+
+[node name="Marker2D2" type="Marker2D" parent="."]
+position = Vector2(576, 288)
+
+[node name="Marker2D3" type="Marker2D" parent="."]
+position = Vector2(960, -288)
+
+[node name="Marker2D4" type="Marker2D" parent="."]
+position = Vector2(-960, -288)
