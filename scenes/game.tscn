@@ -1,17 +1,17 @@
 [gd_scene load_steps=13 format=3 uid="uid://dvqhqpcj8g465"]
 
 [ext_resource type="Script" uid="uid://dd32tbbhrppmk" path="res://scripts/game.gd" id="1_uwrxv"]
-[ext_resource type="Texture2D" uid="uid://cfgbpdrohkw8f" path="res://assets/background/Layer_0010_1.png" id="2_dinhu"]
-[ext_resource type="Texture2D" uid="uid://v2cwyvfx6tch" path="res://assets/background/Layer_0009_2.png" id="3_kvuet"]
-[ext_resource type="Texture2D" uid="uid://bpboujd7oktr" path="res://assets/background/Layer_0008_3.png" id="4_trtic"]
-[ext_resource type="Texture2D" uid="uid://ddjwxjkoyd8pp" path="res://assets/background/Layer_0006_4.png" id="5_ir15t"]
-[ext_resource type="Texture2D" uid="uid://do8qghfc4k8sp" path="res://assets/background/Layer_0005_5.png" id="6_ca42v"]
-[ext_resource type="Texture2D" uid="uid://btq1vkvhrqooh" path="res://assets/background/Layer_0007_Lights.png" id="7_rysoc"]
-[ext_resource type="Texture2D" uid="uid://bcia8llt73nqs" path="res://assets/background/Layer_0004_Lights.png" id="8_ssvqc"]
-[ext_resource type="Texture2D" uid="uid://15o6kj5hvitr" path="res://assets/background/Layer_0003_6.png" id="9_264po"]
-[ext_resource type="Texture2D" uid="uid://cprw1bgabbjes" path="res://assets/background/Layer_0002_7.png" id="10_1kice"]
-[ext_resource type="Texture2D" uid="uid://bj60oy2cbp0k3" path="res://assets/background/Layer_0001_8.png" id="11_5newe"]
-[ext_resource type="Texture2D" uid="uid://2wtmggkpaqjt" path="res://assets/background/Layer_0000_9.png" id="12_37s47"]
+[ext_resource type="Texture2D" uid="uid://cfgbpdrohkw8f" path="res://assets/background/forest/Layer_0010_1.png" id="2_dinhu"]
+[ext_resource type="Texture2D" uid="uid://v2cwyvfx6tch" path="res://assets/background/forest/Layer_0009_2.png" id="3_kvuet"]
+[ext_resource type="Texture2D" uid="uid://bpboujd7oktr" path="res://assets/background/forest/Layer_0008_3.png" id="4_trtic"]
+[ext_resource type="Texture2D" uid="uid://ddjwxjkoyd8pp" path="res://assets/background/forest/Layer_0006_4.png" id="5_ir15t"]
+[ext_resource type="Texture2D" uid="uid://do8qghfc4k8sp" path="res://assets/background/forest/Layer_0005_5.png" id="6_ca42v"]
+[ext_resource type="Texture2D" uid="uid://btq1vkvhrqooh" path="res://assets/background/forest/Layer_0007_Lights.png" id="7_rysoc"]
+[ext_resource type="Texture2D" uid="uid://bcia8llt73nqs" path="res://assets/background/forest/Layer_0004_Lights.png" id="8_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://15o6kj5hvitr" path="res://assets/background/forest/Layer_0003_6.png" id="9_264po"]
+[ext_resource type="Texture2D" uid="uid://cprw1bgabbjes" path="res://assets/background/forest/Layer_0002_7.png" id="10_1kice"]
+[ext_resource type="Texture2D" uid="uid://bj60oy2cbp0k3" path="res://assets/background/forest/Layer_0001_8.png" id="11_5newe"]
+[ext_resource type="Texture2D" uid="uid://2wtmggkpaqjt" path="res://assets/background/forest/Layer_0000_9.png" id="12_37s47"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_uwrxv")
@@ -29,8 +29,7 @@ spawn_path = NodePath("../Projectiles")
 [node name="Projectiles" type="Node" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(0, -129)
-enabled = false
+position = Vector2(0, -292)
 zoom = Vector2(0.5, 0.5)
 
 [node name="Background" type="Node2D" parent="."]

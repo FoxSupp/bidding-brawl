@@ -1,11 +1,11 @@
 extends Control
 
-@onready var user_input: LineEdit = $CenterContainer/VBox/Grid/UserInput
-@onready var ip_input: LineEdit = $CenterContainer/VBox/Grid/IpInput
-@onready var port_input: LineEdit = $CenterContainer/VBox/Grid/PortInput
-@onready var host_button: Button = $CenterContainer/VBox/Buttons/HostButton
-@onready var join_button: Button = $CenterContainer/VBox/Buttons/JoinButton
-@onready var status_label: Label = $CenterContainer/VBox/Status
+@onready var user_input: LineEdit = $VBox/Grid/UserInput
+@onready var ip_input: LineEdit = $VBox/Grid/IpInput
+@onready var port_input: LineEdit = $VBox/Grid/PortInput
+@onready var host_button: Button = $VBox/Buttons/HostButton
+@onready var join_button: Button = $VBox/Buttons/JoinButton
+@onready var status_label: Label = $VBox/Status
 
 const MIN_PORT: int = 1
 const MAX_PORT: int = 65535
@@ -45,3 +45,8 @@ func _on_error(msg: String) -> void:
 
 func _is_valid_port(text: String) -> bool:
 	return text.is_valid_int() and int(text) in range(MIN_PORT, MAX_PORT + 1)
+
+
+func _on_button_back_pressed() -> void:
+	hide()
+	$"../MainMenu".show()

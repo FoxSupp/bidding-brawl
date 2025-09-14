@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcia8llt73nqs"
-path="res://.godot/imported/Layer_0004_Lights.png-a87cc7413ffdb17aa93cd307806332bb.ctex"
+uid="uid://csumkg0smf3a7"
+path="res://.godot/imported/near-clouds.png-acce58904992ff581e1cc2905da964b4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/background/Layer_0004_Lights.png"
-dest_files=["res://.godot/imported/Layer_0004_Lights.png-a87cc7413ffdb17aa93cd307806332bb.ctex"]
+source_file="res://assets/background/mountain/near-clouds.png"
+dest_files=["res://.godot/imported/near-clouds.png-acce58904992ff581e1cc2905da964b4.ctex"]
 
 [params]
 

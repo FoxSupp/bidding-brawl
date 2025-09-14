@@ -62,9 +62,10 @@ func _spawn_all_players() -> void:
 		player_instance.name = str(player_id)
 		
 		if spawn_points:
-			var spawn_point: Node = spawn_points.pop_back()
+			var spawn_point: Node = spawn_points.pick_random()
 			player_instance.position = spawn_point.position
 			spawn_point.queue_free()
+			spawn_points.remove_at(spawn_points.find(spawn_point))
 		
 		players.add_child(player_instance)
 		player_instance.died.connect(_on_player_died)
