@@ -1,35 +1,69 @@
-[gd_scene load_steps=2 format=3 uid="uid://csvyydtnk1vn3"]
+[gd_scene load_steps=3 format=3 uid="uid://csvyydtnk1vn3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7kks"]
-bg_color = Color(4.81307e-07, 0.607778, 0.564277, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.15, 0.15, 0.2, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.7, 0.9, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ready_indicator"]
+bg_color = Color(0.2, 0.8, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="PlayerSlot" type="Control"]
-custom_minimum_size = Vector2(250, 40)
+custom_minimum_size = Vector2(280, 50)
 layout_mode = 3
-anchor_right = 0.420139
-anchor_bottom = 0.145062
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_use_anchors_ = true
 
 [node name="Background" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -20.0
-offset_right = 250.0
-offset_bottom = 20.0
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_u7kks")
-
-[node name="PlayerName" type="Label" parent="Background"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_background")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerName" type="Label" parent="Background/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 16
 text = "Player 1"
 vertical_alignment = 1
+
+[node name="ReadyIndicator" type="Panel" parent="Background/HBoxContainer"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ready_indicator")

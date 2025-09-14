@@ -9,14 +9,18 @@ signal died(player_id: int)
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var input_synch: Node2D = $InputSynch
 @onready var muzzle_rotation: Node2D = $MuzzleRotation
+@onready var label_hp: Label = $HP/LabelHP
 @onready var hp_bar: ProgressBar = $HP/HPBar
 @onready var camera: Camera2D = $Camera2D
+@onready var label_playername: Label = $LabelPlayername
 @onready var collision: CollisionShape2D = $CollisionShape2D
 @onready var projectiles_root: Node = get_tree().root.get_node("/root/Game/Projectiles")
 
+const BASE_DAMAGE: float = 10.0
 const BASE_SPEED: float = 300.0
 const JUMP_VELOCITY: float = -500.0
 const KILL_MONEY: int = 100
+const DEATH_MONEY: int = 20
 const BULLET_SCENE = preload("res://scenes/bullet.tscn")
 
 var spectating_cam: Camera2D
@@ -29,10 +33,12 @@ var upgrade_speed_bonus: float = 0.0
 var upgrade_multishot_count: int = 0
 var upgrade_firerate_multiplier: float = 1.0
 var upgrade_max_health: int = 0
+var upgrade_jump_height: float = 0.0
 
 var upgrades: Array[UpgradeBase] = []
 
-@export var health: int = 5
+@export var current_health: int = 100
+@export var max_health: int = 100
 @export var score: int = 0
 @export var dead: bool = false
 
@@ -52,9 +58,8 @@ func _ready() -> void:
 	
 	if multiplayer.is_server():
 		_init_upgrades()
-		health += upgrade_max_health
-		hp_bar.max_value = health
-		hp_bar.value = health
+		initialize_health()
+		label_playername.text = NetworkManager.players[input_synch.get_multiplayer_authority()].username
 	
 	
 	if input_synch.is_multiplayer_authority():
@@ -79,7 +84,7 @@ func _physics_process(delta: float) -> void:
 	_handle_aiming()
 	_handle_shooting()
 	
-	if health <= 0:
+	if current_health <= 0:
 		_handle_death()
 
 func _handle_movement(delta: float) -> void:
@@ -101,7 +106,8 @@ func _handle_movement(delta: float) -> void:
 		is_jumping = true
 		is_falling = false
 		sprite.play("jump")
-		velocity.y = JUMP_VELOCITY
+		var cur_jump_velocity = JUMP_VELOCITY - upgrade_jump_height
+		velocity.y = cur_jump_velocity
 		if input_synch.is_multiplayer_authority():
 			jump_sound.play()
 	
@@ -153,7 +159,7 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	projectile.dir = dir
 	projectile.owner_peer_id = name.to_int()
 	
-	if "damage" in projectile: projectile.damage = 1
+	if "damage" in projectile: projectile.damage = BASE_DAMAGE
 	if "speed" in projectile: projectile.speed = 900
 	if "lifetime" in projectile: projectile.lifetime = 2
 	projectiles_root.add_child(projectile, true)
@@ -182,11 +188,13 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	if not is_multiplayer_authority():
 		return
 	
-	health -= damage
-	hp_bar.value = health
+	current_health -= damage
+	hp_bar.value = current_health
+	label_hp.text = str(current_health) + "/" + str(max_health)
 	
 	# TODO: implement Fix to not award 2 times Money if killed with 2 Bullets due to Multishot
-	if health <= 0 and shooter_id != name.to_int():
+	if current_health <= 0 and shooter_id != name.to_int():
+		SessionManager.add_money(int(name), DEATH_MONEY)
 		SessionManager.add_money(shooter_id, KILL_MONEY)
 		SessionManager.add_kill(shooter_id)
 
@@ -215,3 +223,13 @@ func despawn_player() -> void:
 			input_synch_node.public_visibility = false
 	await get_tree().process_frame
 	queue_free()
+
+func initialize_health() -> void:
+	# Calculate total max health including upgrades
+	max_health = max_health + upgrade_max_health  # Base health (100) + upgrade bonus
+	current_health = max_health
+	
+	# Update UI elements
+	hp_bar.max_value = max_health
+	hp_bar.value = max_health
+	label_hp.text = str(current_health) + "/" + str(max_health)

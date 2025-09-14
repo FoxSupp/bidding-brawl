@@ -6,7 +6,7 @@ var spawn_positions: Node
 
 const PLAYER_SCENE = preload("res://scenes/player.tscn")
 
-var win_count: int = 2
+var win_count: int = 10
 
 func _ready() -> void:
 	

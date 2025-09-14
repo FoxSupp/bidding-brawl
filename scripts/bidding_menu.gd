@@ -80,9 +80,9 @@ func update_player_stats_from_server(stats_data: Dictionary):
 		if typeof(data) == TYPE_DICTIONARY:
 			var block = PLAYER_STAT_BLOCK.instantiate()
 			player_stats.add_child(block)
-			block.get_node("Panel/LabelUsername").text = str(data["username"])
-			block.get_node("Panel/LabelMoney").text = "Money: " + str(data["money"])
-			block.get_node("Panel/LabelWins").text = "Wins: " + str(data["wins"])
+			block.get_node("Background/VBoxContainer/PlayerName").text = str(data["username"])
+			block.get_node("Background/VBoxContainer/StatsContainer/MoneyContainer/MoneyLabel").text = "Money: " + str(data["money"])
+			block.get_node("Background/VBoxContainer/StatsContainer/WinsContainer/WinsLabel").text = "Wins: " + str(data["wins"])
 
 @rpc("authority", "call_local")
 func update_available_upgrades(upgrade_data: Array[Dictionary]):
@@ -98,8 +98,8 @@ func update_available_upgrades(upgrade_data: Array[Dictionary]):
 		slot.upgrade = UpgradeManager.get_upgrade_by_id(upgrade.upgrade_id)
 		
 		# Set name and description
-		if slot.has_node("LabelName"):
-			var label_name = slot.get_node("LabelName") as Label
+		if slot.has_node("Background/VBoxContainer/NameContainer/LabelName"):
+			var label_name = slot.get_node("Background/VBoxContainer/NameContainer/LabelName") as Label
 			label_name.text = upgrade.name
 			label_name.tooltip_text = upgrade.description
 		

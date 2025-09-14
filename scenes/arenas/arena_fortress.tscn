@@ -233,15 +233,15 @@ tile_set = SubResource("TileSet_jkyen")
 [node name="SpawnPositions" parent="." instance=ExtResource("2_3kyg7")]
 
 [node name="Marker2D" parent="SpawnPositions" index="0"]
-position = Vector2(-576, -48)
+position = Vector2(-710, -192)
 
 [node name="Marker2D2" parent="SpawnPositions" index="1"]
-position = Vector2(576, 120)
+position = Vector2(682, 120)
 
 [node name="Marker2D3" parent="SpawnPositions" index="2"]
-position = Vector2(-672, 144)
+position = Vector2(-710, 144)
 
 [node name="Marker2D4" parent="SpawnPositions" index="3"]
-position = Vector2(-696, -216)
+position = Vector2(682, -432)
 
 [editable path="SpawnPositions"]
