@@ -1,14 +1,18 @@
-[gd_scene load_steps=10 format=3 uid="uid://dxpt7g0id8eq6"]
+[gd_scene load_steps=12 format=3 uid="uid://dxpt7g0id8eq6"]
 
 [ext_resource type="Script" uid="uid://ctyom4fcyhjdb" path="res://scripts/menu/multiplayer_menu.gd" id="1"]
 [ext_resource type="Script" uid="uid://u68hcijt7hv2" path="res://scripts/menu/main_menu.gd" id="2_bqqt6"]
 [ext_resource type="Script" uid="uid://cu0t8x2gdh48x" path="res://scripts/menu/options_menu.gd" id="2_ekxnf"]
+[ext_resource type="Script" uid="uid://bq7kf3xj8kp8l" path="res://scripts/menu/how_to_menu.gd" id="3_howto"]
 [ext_resource type="Texture2D" uid="uid://be7xrssgw13e" path="res://assets/background/mountain/sky.png" id="4_jk1qb"]
 [ext_resource type="Texture2D" uid="uid://c68t8hqgv1cx0" path="res://assets/background/mountain/far-clouds.png" id="4_wu84c"]
 [ext_resource type="Texture2D" uid="uid://csumkg0smf3a7" path="res://assets/background/mountain/near-clouds.png" id="6_5dd4i"]
 [ext_resource type="Texture2D" uid="uid://cjsrmd11ufcbj" path="res://assets/background/mountain/far-mountains.png" id="7_lgwnu"]
 [ext_resource type="Texture2D" uid="uid://yfa0igev3mq0" path="res://assets/background/mountain/mountains.png" id="8_flqon"]
 [ext_resource type="Texture2D" uid="uid://c1807fqndpoy1" path="res://assets/background/mountain/trees.png" id="9_rcqid"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5dd4i"]
+bg_color = Color(0.21, 0.21, 0.21, 0.756863)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -139,30 +143,36 @@ offset_left = 389.0
 offset_top = 195.0
 offset_right = 765.0
 offset_bottom = 611.0
-theme_override_constants/separation = 32
+theme_override_constants/separation = 24
 
 [node name="ButtonMultiplayer" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "Multiplayer"
 
 [node name="ButtonOptions" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "Options"
 
 [node name="ButtonCredits" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "Credits"
 
-[node name="ButtonQuitGame" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
-custom_minimum_size = Vector2(0, 80)
+[node name="ButtonHowTo" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
+text = "How to Play"
+
+[node name="ButtonQuitGame" type="Button" parent="MainMenu/VBoxContainer" groups=["sound_blip"]]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
 text = "Quit Game"
 
 [node name="OptionsMenu" type="Control" parent="."]
@@ -235,6 +245,177 @@ horizontal_alignment = 1
 
 [node name="ButtonBack" type="Button" parent="OptionsMenu/VBoxContainer" groups=["sound_blip"]]
 custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Back"
+
+[node name="HowToMenu" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_howto")
+
+[node name="Panel" type="Panel" parent="HowToMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.023
+anchor_top = 0.069
+anchor_right = 0.977
+anchor_bottom = 0.931
+offset_left = -0.496002
+offset_top = 0.287994
+offset_right = 0.495972
+offset_bottom = -0.288025
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5dd4i")
+
+[node name="Heading" type="Label" parent="HowToMenu"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 47.0
+offset_bottom = 111.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 64
+text = "How to Play"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HowToMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.18
+anchor_right = 0.95
+anchor_bottom = 0.85
+offset_left = 0.400009
+offset_top = 0.400009
+offset_right = -0.400024
+offset_bottom = -0.199997
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HowToMenu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="ConceptLabel" type="Label" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "GAME CONCEPT"
+horizontal_alignment = 1
+
+[node name="ConceptText" type="RichTextLabel" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "Bidding Brawl is a multiplayer arena shooter where strategy meets action! Fight other players in intense battles, earn money through combat, and spend it wisely in auction rounds to buy powerful upgrades.
+
+• Earn 100 coins for each kill
+• Earn 20 coins when you die
+• Between rounds, bid on upgrades in real-time auctions
+• Highest bidder wins the upgrade!"
+fit_content = true
+
+[node name="ControlsLabel" type="Label" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "CONTROLS"
+horizontal_alignment = 1
+
+[node name="ControlsText" type="RichTextLabel" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[b]Movement:[/b]
+• A / D - Move left / right
+• SPACE - Jump
+• Mouse - Aim your weapon
+
+[b]Combat:[/b]
+• LEFT CLICK - Shoot
+• Your crosshair follows your mouse cursor
+• Bullets have travel time and gravity!"
+fit_content = true
+
+[node name="BiddingLabel" type="Label" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "BIDDING SYSTEM"
+horizontal_alignment = 1
+
+[node name="BiddingText" type="RichTextLabel" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "Between combat rounds, you'll enter the bidding phase:
+
+• LEFT CLICK on upgrade slots to increase your bid by 10 coins
+• RIGHT CLICK on upgrade slots to decrease your bid by 10 coins
+• Highest bidder when the timer runs out wins the upgrade
+• Click READY when you're done bidding to start the next round"
+fit_content = true
+
+[node name="UpgradesLabel" type="Label" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "AVAILABLE UPGRADES"
+horizontal_alignment = 1
+
+[node name="UpgradesText" type="RichTextLabel" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[b]Speed:[/b] Increases movement speed by 50 units
+[b]Multishot:[/b] Shoot an additional bullet (spread pattern)
+[b]Firerate:[/b] Shoot 10% faster (reduces cooldown)
+[b]Health:[/b] Increases maximum health by 20 HP
+[b]Jump Height:[/b] Jump 5% higher to reach new areas
+
+Strategy Tip: Balance offense and defense upgrades based on your playstyle!"
+fit_content = true
+
+[node name="TipsLabel" type="Label" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "STRATEGY TIPS"
+horizontal_alignment = 1
+
+[node name="TipsText" type="RichTextLabel" parent="HowToMenu/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "• [b]Aggressive Play:[/b] Focus on kills for maximum income
+• [b]Smart Bidding:[/b] Don't overspend early - save for key upgrades
+• [b]Positioning:[/b] Use jump upgrades to control high ground
+• [b]Combo Upgrades:[/b] Multishot + Firerate = devastating firepower
+• [b]Survival:[/b] Sometimes staying alive earns more than risky kills"
+fit_content = true
+
+[node name="CenterContainer" type="CenterContainer" parent="HowToMenu"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ButtonBack" type="Button" parent="HowToMenu/CenterContainer" groups=["sound_blip"]]
+custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 text = "Back"
 
