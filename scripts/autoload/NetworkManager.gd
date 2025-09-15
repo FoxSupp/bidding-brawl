@@ -7,11 +7,12 @@ signal all_in_game
 signal arena_selected(arena_path: String)
 
 const MENU_SCENE = preload("res://scenes/menu/main_menu.tscn")
-const LOBBY_SCENE = preload("res://scenes/lobby.tscn")
+const LOBBY_SCENE = preload("res://scenes/menu/lobby.tscn")
 const GAME_SCENE = preload("res://scenes/game.tscn")
 const BIDDING_SCENE = preload("res://scenes/bidding/bidding_menu.tscn")
 const WINNING_SCENE = preload("res://scenes/menu/winning_display.tscn")
-const MAX_PLAYERS: int = 32
+const LOBBY_LIST_SCENE = preload("res://scenes/menu/lobby_list.tscn")
+const MAX_PLAYERS: int = 4
 
 var player_name: String = ""
 var peer: ENetMultiplayerPeer
@@ -35,45 +36,24 @@ func _process(_delta: float) -> void:
 			game_started = true
 			emit_signal("all_in_game")
 
-func host(port: int, username: String) -> void:
-	var clean_username: String = username.strip_edges()
-	if clean_username.is_empty():
-		emit_signal("error", "Username is required")
-		return
-	
-	player_name = clean_username
+func host() -> void:
 	peer = ENetMultiplayerPeer.new()
-	var err: Error = peer.create_server(port, MAX_PLAYERS)
+	var err: Error = peer.create_server(8910, MAX_PLAYERS)
 	if err != OK:
-		emit_signal("error", "Failed to host on port %d (error %d)" % [port, err])
 		return
 	
 	multiplayer.multiplayer_peer = peer
-	players.clear()
-	register_player(player_name)
 	_change_scene(LOBBY_SCENE)
 
-func join(ip: String, port: int, username: String) -> void:
-	var clean_username: String = username.strip_edges()
-	var clean_ip: String = ip.strip_edges()
-	
-	if clean_username.is_empty():
-		emit_signal("error", "Username is required")
-		return
-	
-	if clean_ip.is_empty():
-		emit_signal("error", "Server IP is required")
-		return
-	
-	player_name = clean_username
+func join() -> void:
 	peer = ENetMultiplayerPeer.new()
-	var err: Error = peer.create_client(clean_ip, port)
+	var err: Error = peer.create_client("127.0.0.1", 8910)
 	if err != OK:
-		emit_signal("error", "Failed to connect to %s:%d (error %d)" % [clean_ip, port, err])
 		return
 	
 	multiplayer.multiplayer_peer = peer
-	_change_scene(LOBBY_SCENE)
+	
+	_change_scene(LOBBY_LIST_SCENE)
 
 func disconnect_from_server() -> void:
 	if multiplayer.multiplayer_peer:

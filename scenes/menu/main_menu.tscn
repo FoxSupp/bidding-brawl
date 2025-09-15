@@ -47,50 +47,6 @@ theme_override_font_sizes/font_size = 28
 text = "Host or Join a Game"
 horizontal_alignment = 1
 
-[node name="Grid" type="GridContainer" parent="MultiplayerMenu/VBox"]
-layout_mode = 2
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 32
-columns = 2
-
-[node name="UserLabel" type="Label" parent="MultiplayerMenu/VBox/Grid"]
-layout_mode = 2
-text = "Username:"
-horizontal_alignment = 2
-
-[node name="UserInput" type="LineEdit" parent="MultiplayerMenu/VBox/Grid"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Username"
-max_length = 12
-
-[node name="IpLabel" type="Label" parent="MultiplayerMenu/VBox/Grid"]
-layout_mode = 2
-text = "Server IP:"
-horizontal_alignment = 2
-
-[node name="IpInput" type="LineEdit" parent="MultiplayerMenu/VBox/Grid"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "localhost"
-placeholder_text = "127.0.0.1"
-
-[node name="PortLabel" type="Label" parent="MultiplayerMenu/VBox/Grid"]
-layout_mode = 2
-text = "Port:"
-horizontal_alignment = 2
-
-[node name="PortInput" type="LineEdit" parent="MultiplayerMenu/VBox/Grid"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "8910"
-placeholder_text = "8910"
-max_length = 5
-virtual_keyboard_type = 2
-
 [node name="Buttons" type="HBoxContainer" parent="MultiplayerMenu/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 12

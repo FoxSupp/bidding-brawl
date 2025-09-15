@@ -1,8 +1,5 @@
 extends Control
 
-@onready var user_input: LineEdit = $VBox/Grid/UserInput
-@onready var ip_input: LineEdit = $VBox/Grid/IpInput
-@onready var port_input: LineEdit = $VBox/Grid/PortInput
 @onready var host_button: Button = $VBox/Buttons/HostButton
 @onready var join_button: Button = $VBox/Buttons/JoinButton
 @onready var status_label: Label = $VBox/Status
@@ -16,25 +13,12 @@ func _ready() -> void:
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
 	
-	var cmd_args: PackedStringArray = OS.get_cmdline_args()
-	if cmd_args.size() > 1:
-		user_input.text = cmd_args[1]
-
 func _on_host_pressed() -> void:
-	var port_text: String = port_input.text.strip_edges()
-	if not _is_valid_port(port_text):
-		_on_error("Invalid port number")
-		return
-	
-	NetworkManager.host(int(port_text), user_input.text)
+	NetworkManager.host()
 
 func _on_join_pressed() -> void:
-	var port_text: String = port_input.text.strip_edges()
-	if not _is_valid_port(port_text):
-		_on_error("Invalid port number")
-		return
-	
-	NetworkManager.join(ip_input.text, int(port_text), user_input.text)
+	NetworkManager.join()
+	pass
 
 func _on_error(msg: String) -> void:
 	status_label.text = msg

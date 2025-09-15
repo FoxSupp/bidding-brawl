@@ -32,8 +32,7 @@ func _ready() -> void:
 	how_to_button_back.pressed.connect(_on_button_back_pressed)
 
 func _on_menu_button_multiplayer_pressed() -> void:
-	main_menu.hide()
-	multiplayer_menu.show()
+	NetworkManager._change_scene(preload("res://scenes/menu/lobby.tscn"))
 
 func _on_menu_button_options_pressed() -> void:
 	main_menu.hide()

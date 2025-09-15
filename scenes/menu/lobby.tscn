@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://br4t2att6xano"]
+
+[ext_resource type="Script" uid="uid://c8h0ypa4hh1h4" path="res://scripts/lobby.gd" id="1_5k83l"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5k83l")
+
+[node name="LobbyList" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LobbyList"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyList/ScrollContainer"]
+layout_mode = 2
+
+[node name="ButtonHost" type="Button" parent="LobbyList"]
+layout_mode = 0
+offset_top = 585.0
+offset_right = 152.0
+offset_bottom = 646.0
+text = "Host"
+
+[node name="ButtonLobbyList" type="Button" parent="LobbyList"]
+layout_mode = 0
+offset_left = 179.0
+offset_top = 585.0
+offset_right = 331.0
+offset_bottom = 646.0
+text = "Sync Lobbies"
+
+[node name="Lobby" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContainerPlayers" type="VBoxContainer" parent="Lobby"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="LobbyList/ButtonHost" to="." method="_on_button_host_pressed"]
+[connection signal="pressed" from="LobbyList/ButtonLobbyList" to="." method="_on_button_lobby_list_pressed"]
