@@ -26,7 +26,7 @@ func _on_host_pressed() -> void:
 		_on_error("Invalid port number")
 		return
 	
-	NetworkManager.host(int(port_text), user_input.text)
+	NetworkManager.host()
 
 func _on_join_pressed() -> void:
 	var port_text: String = port_input.text.strip_edges()

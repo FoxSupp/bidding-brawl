@@ -14,7 +14,7 @@ const WINNING_SCENE = preload("res://scenes/menu/winning_display.tscn")
 const MAX_PLAYERS: int = 32
 
 var player_name: String = ""
-var peer: ENetMultiplayerPeer
+var peer: MultiplayerPeer
 var players: Dictionary = {}
 var game_started: bool = false
 var game_version: String
@@ -35,38 +35,22 @@ func _process(_delta: float) -> void:
 			game_started = true
 			emit_signal("all_in_game")
 
-func host(port: int, username: String) -> void:
-	var clean_username: String = username.strip_edges()
-	if clean_username.is_empty():
-		emit_signal("error", "Username is required")
-		return
+func host() -> void:
 	
-	player_name = clean_username
-	peer = ENetMultiplayerPeer.new()
-	var err: Error = peer.create_server(port, MAX_PLAYERS)
+	peer = SteamMultiplayerPeer.new()
+	#peer = ENetMultiplayerPeer.new()
+	var err: Error = peer.create_host(0)
 	if err != OK:
-		emit_signal("error", "Failed to host on port %d (error %d)" % [port, err])
+		emit_signal("error", "Failed to host (error %d)" % err)
 		return
 	
 	multiplayer.multiplayer_peer = peer
 	players.clear()
-	register_player(player_name)
+	register_player(Steam.getPersonaName())
 	_change_scene(LOBBY_SCENE)
 
-func join(ip: String, port: int, username: String) -> void:
-	var clean_username: String = username.strip_edges()
-	var clean_ip: String = ip.strip_edges()
-	
-	if clean_username.is_empty():
-		emit_signal("error", "Username is required")
-		return
-	
-	if clean_ip.is_empty():
-		emit_signal("error", "Server IP is required")
-		return
-	
-	player_name = clean_username
-	peer = ENetMultiplayerPeer.new()
+func join() -> void:
+	peer = SteamMultiplayerPeer.new()
 	var err: Error = peer.create_client(clean_ip, port)
 	if err != OK:
 		emit_signal("error", "Failed to connect to %s:%d (error %d)" % [clean_ip, port, err])
