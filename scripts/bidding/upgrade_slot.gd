@@ -45,6 +45,17 @@ func _setup_node_references() -> void:
 		
 		if bidding_manager and bidding_manager.has_signal("bids_updated"):
 			bidding_manager.bids_updated.connect(_on_bids_updated)
+	
+	# If still no references found, retry after another frame (max 10 retries)
+	if not bidding_manager or not label_money:
+		if not has_meta("retry_count"):
+			set_meta("retry_count", 0)
+		var retry_count = get_meta("retry_count")
+		if retry_count < 10:
+			set_meta("retry_count", retry_count + 1)
+			call_deferred("_setup_node_references")
+		else:
+			print("ERROR: Could not find bidding_manager or label_money after 10 retries")
 
 func _on_button_pressed() -> void:
 	if upgrade and bidding_manager:

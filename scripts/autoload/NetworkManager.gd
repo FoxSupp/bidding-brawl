@@ -135,6 +135,8 @@ func _on_server_disconnected() -> void:
 
 @rpc("authority", "call_local")
 func change_to_bidding() -> void:
+	# Add small delay to ensure all clients are ready for scene transition
+	await get_tree().create_timer(0.5).timeout
 	_change_scene(BIDDING_SCENE)
 
 @rpc("authority", "call_local")
