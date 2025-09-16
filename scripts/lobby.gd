@@ -16,6 +16,7 @@ var steam_username: String = ""
 
 func _ready() -> void:
 	lobby_updated.connect(_update_lobby_ui)
+	NetworkManager.players_updated.connect(_on_players_updated)
 	
 	Steam.join_requested.connect(_on_lobby_join_requested)
 	Steam.lobby_created.connect(_on_lobby_created)
@@ -28,6 +29,11 @@ func _ready() -> void:
 	#Steam.persona_state_change.connect(_on_persona_change)
 	
 	check_command_line()
+
+func _on_players_updated(_players: Dictionary) -> void:
+	# Update the lobby UI when player data changes
+	if $Lobby.visible:
+		_update_lobby_ui()
 
 func check_command_line() -> void:
 	var these_arguments: Array = OS.get_cmdline_args()
@@ -127,17 +133,68 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 
 func _update_lobby_ui() -> void:
 	get_lobby_members()
-	if NetworkManager.is_server():
-		$Lobby/ButtonStartGame.disabled = false
+	_update_start_button()
 	$LobbyList.hide()
 	$Lobby.show()
 	if lobby_id != 0:
 		for c in $Lobby/ContainerPlayers.get_children():
 			c.queue_free()
+		
+		# Display Steam lobby members first (these show as connecting)
 		for member in lobby_members:
 			var player_slot = PLAYER_SLOT_SCENE.instantiate()
-			player_slot.get_node("Background/HBoxContainer/PlayerName").text = member.steam_name
 			$Lobby/ContainerPlayers.add_child(player_slot)
+			
+			# Check if this Steam user is already registered in NetworkManager
+			var steam_id = member.steam_id
+			var username = member.steam_name
+			var status = NetworkManager.PlayerStatus.CONNECTING
+			
+			# Look for this steam user in NetworkManager players by steam_id
+			for network_id in NetworkManager.players:
+				var player_data = NetworkManager.players[network_id]
+				var player_steam_id = player_data.get("steam_id", 0)
+				
+				# Match by Steam ID (more reliable than username)
+				if player_steam_id == steam_id and player_steam_id != 0:
+					status = player_data.get("status", NetworkManager.PlayerStatus.CONNECTING)
+					username = player_data.get("username", member.steam_name)
+					break
+			
+			# Call deferred to ensure the node is ready
+			player_slot.call_deferred("set_player_data", username, status)
+
+func _update_start_button() -> void:
+	if NetworkManager.is_server():
+		# Only enable start button if all Steam lobby members are fully registered
+		var all_steam_members_registered = true
+		
+		# Check if every Steam lobby member has a corresponding registered NetworkManager player
+		for member in lobby_members:
+			var steam_id = member.steam_id
+			var member_registered = false
+			
+			# Look for this steam user in NetworkManager players
+			for network_id in NetworkManager.players:
+				var player_data = NetworkManager.players[network_id]
+				var player_steam_id = player_data.get("steam_id", 0)
+				var player_status = player_data.get("status", NetworkManager.PlayerStatus.CONNECTING)
+				
+				# Check if this Steam member is registered in NetworkManager
+				if player_steam_id == steam_id and player_steam_id != 0 and player_status == NetworkManager.PlayerStatus.REGISTERED:
+					member_registered = true
+					break
+			
+			if not member_registered:
+				all_steam_members_registered = false
+				break
+		
+		# Also need at least one player
+		var has_players = lobby_members.size() > 0
+		
+		$Lobby/ButtonStartGame.disabled = not (all_steam_members_registered and has_players)
+	else:
+		$Lobby/ButtonStartGame.disabled = true
 
 func _on_button_host_pressed() -> void:
 	create_lobby()

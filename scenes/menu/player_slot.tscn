@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://csvyydtnk1vn3"]
+[gd_scene load_steps=4 format=3 uid="uid://csvyydtnk1vn3"]
+
+[ext_resource type="Script" uid="uid://dmao7acsybc7u" path="res://scripts/menu/player_slot.gd" id="1_player_slot"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
 bg_color = Color(0.15, 0.15, 0.2, 0.9)
@@ -12,8 +14,8 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ready_indicator"]
-bg_color = Color(0.2, 0.8, 0.3, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_connecting"]
+bg_color = Color(1, 0.8, 0.2, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -27,6 +29,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_player_slot")
 
 [node name="Background" type="Panel" parent="."]
 layout_mode = 1
@@ -66,4 +69,4 @@ custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_ready_indicator")
+theme_override_styles/panel = SubResource("StyleBoxFlat_connecting")

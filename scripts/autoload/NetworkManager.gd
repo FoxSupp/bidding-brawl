@@ -20,6 +20,13 @@ var players: Dictionary = {}
 var game_started: bool = false
 var game_version: String
 
+# Player status constants
+enum PlayerStatus {
+	CONNECTING,    # In lobby but not registered yet
+	REGISTERED,    # Fully registered and ready
+	DISCONNECTED   # Disconnected
+}
+
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -42,7 +49,7 @@ func host() -> void:
 	peer.create_host(0)
 	multiplayer.multiplayer_peer = peer
 	print(multiplayer)
-	register_player(player_name)
+	register_player(player_name, Steam.getSteamID())
 
 func join_lobby(lobby_id: int) -> void:
 	peer = SteamMultiplayerPeer.new()
@@ -87,9 +94,27 @@ func get_all_in_game() -> bool:
 			return false
 	return true
 
+func get_all_players_registered() -> bool:
+	if players.is_empty():
+		return false
+	
+	for player_id in players:
+		var player_data = players[player_id]
+		if typeof(player_data) == TYPE_DICTIONARY:
+			var status = player_data.get("status", PlayerStatus.CONNECTING)
+			if status != PlayerStatus.REGISTERED:
+				return false
+		else:
+			return false
+	return true
+
 # Server Callbacks
 func _on_peer_connected(id: int) -> void:
 	emit_signal("connection_status_changed", "Peer %d connected" % id)
+	# Add player with CONNECTING status initially (will be updated when they register)
+	if multiplayer.is_server():
+		players[id] = {"username": "Connecting...", "in_game": false, "status": PlayerStatus.CONNECTING, "steam_id": 0}
+		_broadcast_players()
 
 func _on_peer_disconnected(id: int) -> void:
 	emit_signal("connection_status_changed", "Peer %d disconnected" % id)
@@ -134,13 +159,23 @@ func start_game() -> void:
 
 
 @rpc("any_peer")
-func register_player(username: String) -> void:
+func register_player(username: String, steam_id: int = 0) -> void:
 	if not multiplayer.is_server():
 		return
 	
 	var sender_id: int = multiplayer.get_remote_sender_id()
 	sender_id = 1 if sender_id == 0 else sender_id
-	players[sender_id] = {"username": username.strip_edges(), "in_game": false}
+	
+	# Use provided steam_id or get it if not provided
+	if steam_id == 0:
+		steam_id = Steam.getSteamID() if sender_id == 1 else 0
+	
+	players[sender_id] = {
+		"username": username.strip_edges(), 
+		"in_game": false, 
+		"status": PlayerStatus.REGISTERED,
+		"steam_id": steam_id
+	}
 	_broadcast_players()
 
 @rpc("authority", "call_local")
@@ -193,7 +228,8 @@ func version_mismatch(server_version: String) -> void:
 @rpc("authority")
 func version_accepted() -> void:
 	print("Version check passed, proceeding with registration")
-	rpc_id(1, "register_player", player_name)
+	var my_steam_id = Steam.getSteamID()
+	rpc_id(1, "register_player", player_name, my_steam_id)
 
 @rpc("authority", "call_local")
 func sync_arena_selection(arena_path: String) -> void:
