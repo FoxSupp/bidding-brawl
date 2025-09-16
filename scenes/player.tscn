@@ -190,6 +190,9 @@ properties/9/replication_mode = 1
 properties/10/path = NodePath(".:current_health")
 properties/10/spawn = true
 properties/10/replication_mode = 1
+properties/11/path = NodePath("Sprite:flip_h")
+properties/11/spawn = true
+properties/11/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 properties/0/path = NodePath("InputSynch:move_input")

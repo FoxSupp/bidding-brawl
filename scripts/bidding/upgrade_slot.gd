@@ -5,7 +5,7 @@ var upgrade: UpgradeBase
 var bidding_manager
 var player_stats: Dictionary
 
-@onready var label_money: Label = get_tree().root.get_node("/root/BiddingMenu/Background/LabelBidMoney")
+@onready var label_money: Label
 @onready var label_bid_amount: Label = $Background/VBoxContainer/BidAmountContainer/LabelBidAmount
 @onready var label_highest_bidder: Label = $HighestBidderContainer/LabelHighestBidder
 @onready var highest_bidder_container: Panel = $HighestBidderContainer
@@ -16,18 +16,40 @@ var slot_bids: Dictionary = {}
 const BID_AMOUNT: int = 10
 
 func _ready() -> void:
-	bidding_manager = get_tree().root.get_node("/root/BiddingMenu/BiddingManager")
-	bidding_manager.bids_updated.connect(_on_bids_updated)
+	# Wait for the node tree to be fully built
+	await get_tree().process_frame
+	_setup_node_references()
+	
 	SessionManager.player_stats_received.connect(_on_player_stats_received)
 	# Stats einmalig beim Start laden
 	SessionManager.rpc_id(1, "get_player_stats", multiplayer.get_unique_id())
 	await SessionManager.player_stats_received
 	_update_money_ui()
 
+func _setup_node_references() -> void:
+	# Safely get references to nodes that might not exist yet
+	var bidding_menu = get_tree().get_first_node_in_group("bidding_menu")
+	if not bidding_menu:
+		bidding_menu = get_tree().root.get_node_or_null("BiddingMenu")
+	
+	if bidding_menu:
+		bidding_manager = bidding_menu.get_node_or_null("BiddingManager")
+		label_money = bidding_menu.get_node_or_null("Background/LabelBidMoney")
+		
+		if bidding_manager and bidding_manager.has_signal("bids_updated"):
+			bidding_manager.bids_updated.connect(_on_bids_updated)
+	else:
+		# Fallback: try to find nodes by different methods
+		bidding_manager = get_node_or_null("../../BiddingManager")
+		label_money = get_node_or_null("../../Background/LabelBidMoney")
+		
+		if bidding_manager and bidding_manager.has_signal("bids_updated"):
+			bidding_manager.bids_updated.connect(_on_bids_updated)
+
 func _on_button_pressed() -> void:
-	if upgrade:
+	if upgrade and bidding_manager:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			if player_stats["money"] < BID_AMOUNT:
+			if not player_stats.has("money") or player_stats["money"] < BID_AMOUNT:
 				return
 			bidding_manager.rpc_id(1, "add_bid", slot_index, multiplayer.get_unique_id(), BID_AMOUNT)
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
@@ -51,7 +73,8 @@ func _on_player_stats_received(peer_id: int, stats: Dictionary) -> void:
 		player_stats = stats
 
 func _update_money_ui() -> void:
-	label_money.text = "Money: " + str(player_stats["money"])
+	if label_money and player_stats.has("money"):
+		label_money.text = "Money: " + str(player_stats["money"])
 
 @rpc("authority", "call_local")
 func update_highest_bid_ui(player_name: String) -> void:

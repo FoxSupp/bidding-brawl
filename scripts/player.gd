@@ -34,6 +34,7 @@ var upgrade_multishot_count: int = 0
 var upgrade_firerate_multiplier: float = 1.0
 var upgrade_max_health: int = 0
 var upgrade_jump_height: float = 0.0
+var upgrade_multijump_count: int = 0
 
 var upgrades: Array[UpgradeBase] = []
 
@@ -46,6 +47,9 @@ var upgrades: Array[UpgradeBase] = []
 var is_jumping: bool = false
 var is_falling: bool = false
 
+# Jump tracking for multijump
+var remaining_jumps: int = 0
+
 func _enter_tree() -> void:
 	get_node("InputSynch").set_multiplayer_authority(name.to_int())
 
@@ -53,12 +57,14 @@ func _ready() -> void:
 	
 	"""Debug for all things only happening on Server Player"""
 	if multiplayer.is_server() and input_synch.get_multiplayer_authority() == 1:
-		#UpgradeManager.apply_upgrade(self, "upgrade_multishot")
+		UpgradeManager.apply_upgrade(self, "upgrade_multijump")
 		pass
 	
 	if multiplayer.is_server():
 		_init_upgrades()
 		initialize_health()
+		# Initialize jump counter (1 base jump + multijump upgrades)
+		remaining_jumps = 1 + upgrade_multijump_count
 		label_playername.text = NetworkManager.players[input_synch.get_multiplayer_authority()].username
 	
 	
@@ -101,13 +107,17 @@ func _handle_movement(delta: float) -> void:
 		if is_jumping or is_falling:
 			is_jumping = false
 			is_falling = false
+			# Reset jumps when touching ground (1 base jump + multijump upgrades)
+			remaining_jumps = 1 + upgrade_multijump_count
 	
-	if input_synch.jump_input and is_on_floor():
+	# Handle jumping - both ground and air jumps
+	if input_synch.jump_input and remaining_jumps > 0:
 		is_jumping = true
 		is_falling = false
 		sprite.play("jump")
 		var cur_jump_velocity = JUMP_VELOCITY - upgrade_jump_height
 		velocity.y = cur_jump_velocity
+		remaining_jumps -= 1
 		if input_synch.is_multiplayer_authority():
 			jump_sound.play()
 	
