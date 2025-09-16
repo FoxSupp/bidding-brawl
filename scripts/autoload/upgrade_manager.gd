@@ -9,7 +9,8 @@ func _ready() -> void:
 		UpgradeHealth.new(),
 		UpgradeSpeed.new(),
 		UpgradeJumpHeight.new(),
-		UpgradeMultijump.new()
+		UpgradeMultijump.new(),
+		UpgradeBulletBounce.new(),
 	]
 
 func apply_upgrade(player: Player, upgrade_id: String) -> bool:

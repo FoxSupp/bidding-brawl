@@ -36,6 +36,7 @@ var upgrade_firerate_multiplier: float = 1.0
 var upgrade_max_health: int = 0
 var upgrade_jump_height: float = 0.0
 var upgrade_multijump_count: int = 0
+var upgrade_bounce_count: int = 0
 
 var upgrades: Array[UpgradeBase] = []
 
@@ -175,7 +176,8 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	
 	if "damage" in projectile: projectile.damage = BASE_DAMAGE
 	if "speed" in projectile: projectile.speed = 900
-	if "lifetime" in projectile: projectile.lifetime = 2
+	if "lifetime" in projectile: projectile.lifetime = 10
+	if "bouce" in projectile: projectile.bounce = upgrade_bounce_count
 	projectiles_root.add_child(projectile, true)
 	
 	# Shoot Sound über RPC - alle hören es, Schütze lauter
@@ -215,7 +217,6 @@ func play_hit_sound():
 	# Hit Sound über RPC - nur Schütze hört es
 	rpc("play_hit_sound_rpc")
 		
-
 func _on_animation_finished() -> void:
 	# When jump animation finishes, check if we're still in the air
 	if sprite.animation == "jump":

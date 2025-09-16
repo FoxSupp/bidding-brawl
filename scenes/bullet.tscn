@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cqx3hfpouk1br"]
+[gd_scene load_steps=6 format=3 uid="uid://cqx3hfpouk1br"]
 
 [ext_resource type="Script" uid="uid://dul3lebrid3nx" path="res://scripts/bullet.gd" id="1_mkf8s"]
 [ext_resource type="Texture2D" uid="uid://ycomchgwsecu" path="res://assets/sprites/sword.png" id="2_y25gk"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_y25gk"]
+bounce = 0.5
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y25gk"]
 radius = 4.0
@@ -24,6 +27,7 @@ properties/3/replication_mode = 1
 [node name="Bullet" type="RigidBody2D"]
 collision_layer = 4
 collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_y25gk")
 continuous_cd = 2
 contact_monitor = true
 max_contacts_reported = 5

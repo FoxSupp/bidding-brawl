@@ -5,6 +5,7 @@ extends RigidBody2D
 @export var dir: Vector2
 @export var owner_peer_id: int
 @export var lifetime: float
+@export var bounce: int = 0
 
 
 func _ready() -> void:
@@ -29,7 +30,10 @@ func _on_body_entered(body: Node) -> void:
 		var shooter_player = get_shooter_player()
 		if shooter_player and shooter_player.has_method("play_hit_sound_rpc"):
 			shooter_player.rpc("play_hit_sound_rpc")
-	call_deferred("queue_free")
+	if bounce <= 0:
+		call_deferred("queue_free")
+	bounce -= 1
+
 
 func get_shooter_player() -> Player:
 	var players = get_tree().get_nodes_in_group("player")
