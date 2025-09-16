@@ -6,7 +6,7 @@ extends RigidBody2D
 @export var owner_peer_id: int
 @export var lifetime: float
 @export var bounce: int = 0
-@export var homing_time: float = 0.1
+@export var homing_time: float = 0.0
 
 
 
@@ -63,7 +63,6 @@ func _on_body_entered(body: Node) -> void:
 	if bounce <= 0:
 		call_deferred("queue_free")
 	bounce -= 1
-
 
 func get_shooter_player() -> Player:
 	var players = get_tree().get_nodes_in_group("player")

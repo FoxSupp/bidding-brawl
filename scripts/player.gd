@@ -178,7 +178,7 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	if "damage" in projectile: projectile.damage = BASE_DAMAGE
 	if "speed" in projectile: projectile.speed = 900
 	if "lifetime" in projectile: projectile.lifetime = 10
-	if "bouce" in projectile: projectile.bounce = upgrade_bounce_count
+	if "bounce" in projectile: projectile.bounce = upgrade_bounce_count
 	if "homing_time" in projectile: projectile.homing_time = upgrade_homing_time
 	projectiles_root.add_child(projectile, true)
 	
