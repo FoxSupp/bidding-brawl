@@ -109,6 +109,20 @@ scroll_active = false
 scroll_following = true
 shortcut_keys_enabled = false
 
+[node name="ButtonBack" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -257.0
+offset_top = -51.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Back"
+
 [connection signal="pressed" from="LobbyList/ButtonHost" to="." method="_on_button_host_pressed"]
 [connection signal="pressed" from="LobbyList/ButtonLobbyList" to="." method="_on_button_lobby_list_pressed"]
 [connection signal="pressed" from="Lobby/ButtonStartGame" to="." method="_on_button_start_game_pressed"]
+[connection signal="pressed" from="ButtonBack" to="." method="_on_button_back_pressed"]

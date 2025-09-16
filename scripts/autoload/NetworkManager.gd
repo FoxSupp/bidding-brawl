@@ -149,6 +149,13 @@ func change_to_lobby() -> void:
 func start_game() -> void:
 	_change_scene(GAME_SCENE)
 
+@rpc("any_peer", "call_local")
+func leave_lobby() -> void:
+	if peer:
+		peer.close()
+		multiplayer.multiplayer_peer = null
+	#players.clear()
+	_change_scene(MENU_SCENE)
 
 @rpc("any_peer")
 func register_player(username: String, steam_id: int = 0) -> void:

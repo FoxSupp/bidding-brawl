@@ -5,6 +5,7 @@ signal died(player_id: int)
 
 @onready var shoot_sound: AudioStreamPlayer2D = $ShootSound
 @onready var jump_sound: AudioStreamPlayer2D = $JumpSound
+@onready var hit_sound: AudioStreamPlayer2D = $HitSound
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var input_synch: Node2D = $InputSynch
@@ -57,7 +58,7 @@ func _ready() -> void:
 	
 	"""Debug for all things only happening on Server Player"""
 	if multiplayer.is_server() and input_synch.get_multiplayer_authority() == 1:
-		UpgradeManager.apply_upgrade(self, "upgrade_multijump")
+		#UpgradeManager.apply_upgrade(self, "upgrade_multijump")
 		pass
 	
 	if multiplayer.is_server():
@@ -69,7 +70,7 @@ func _ready() -> void:
 	
 	
 	if input_synch.is_multiplayer_authority():
-		spectating_cam = get_tree().root.get_node("/root/Game/Camera2D")
+		spectating_cam = get_tree().get_first_node_in_group("arena").get_node("SpectatingCam")
 	
 	# Connect the animation finished signal
 	sprite.animation_finished.connect(_on_animation_finished)
@@ -81,6 +82,9 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_multiplayer_authority() or dead:
 		return
+	
+	if position.y >= 768.0:
+		_handle_death()
 	
 	# Cooldown timer runterzählen
 	if shoot_cooldown > 0:
@@ -118,8 +122,8 @@ func _handle_movement(delta: float) -> void:
 		var cur_jump_velocity = JUMP_VELOCITY - upgrade_jump_height
 		velocity.y = cur_jump_velocity
 		remaining_jumps -= 1
-		if input_synch.is_multiplayer_authority():
-			jump_sound.play()
+		# Jump Sound über RPC - wird nur beim Jumper abgespielt
+		rpc("play_jump_sound_rpc")
 	
 	var current_speed = BASE_SPEED + upgrade_speed_bonus
 	velocity.x = input_synch.move_input * current_speed if input_synch.move_input else move_toward(velocity.x, 0, current_speed)
@@ -173,10 +177,9 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	if "speed" in projectile: projectile.speed = 900
 	if "lifetime" in projectile: projectile.lifetime = 2
 	projectiles_root.add_child(projectile, true)
-	if !input_synch.is_multiplayer_authority():
-		shoot_sound.volume_db = -16
-		shoot_sound.pitch_scale = 0.70
-	shoot_sound.play()
+	
+	# Shoot Sound über RPC - alle hören es, Schütze lauter
+	rpc("play_shoot_sound_rpc")
 
 func _handle_death() -> void:
 	dead = true
@@ -207,6 +210,11 @@ func take_damage(damage: int, shooter_id: int) -> void:
 		SessionManager.add_money(int(name), DEATH_MONEY)
 		SessionManager.add_money(shooter_id, KILL_MONEY)
 		SessionManager.add_kill(shooter_id)
+
+func play_hit_sound():
+	# Hit Sound über RPC - nur Schütze hört es
+	rpc("play_hit_sound_rpc")
+		
 
 func _on_animation_finished() -> void:
 	# When jump animation finishes, check if we're still in the air
@@ -243,3 +251,29 @@ func initialize_health() -> void:
 	hp_bar.max_value = max_health
 	hp_bar.value = max_health
 	label_hp.text = str(current_health) + "/" + str(max_health)
+
+# RPC-Funktionen für Sound-Synchronisation
+@rpc("any_peer", "call_local")
+func play_jump_sound_rpc():
+	# Jump Sound nur für den Jumper selbst
+	if input_synch.is_multiplayer_authority():
+		jump_sound.play()
+
+@rpc("any_peer", "call_local") 
+func play_shoot_sound_rpc():
+	# Shoot Sound für alle, aber für Schützen lauter
+	if input_synch.is_multiplayer_authority():
+		# Lauter für den Schützen selbst
+		shoot_sound.volume_db = 0
+		shoot_sound.pitch_scale = 1.0
+	else:
+		# Leiser für andere Clients
+		shoot_sound.volume_db = -16
+		shoot_sound.pitch_scale = 0.70
+	shoot_sound.play()
+
+@rpc("any_peer", "call_local")
+func play_hit_sound_rpc():
+	# Hit Sound nur für den Schützen
+	if input_synch.is_multiplayer_authority():
+		hit_sound.play()

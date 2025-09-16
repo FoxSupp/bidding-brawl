@@ -35,6 +35,8 @@ window/stretch/mode="canvas_items"
 [global_group]
 
 sound_blip="All buttons with this Group make the Blip Sound"
+arena=""
+player=""
 
 [gui]
 

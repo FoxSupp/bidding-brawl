@@ -26,5 +26,14 @@ func _on_body_entered(body: Node) -> void:
 	
 	if body is Player:
 		body.take_damage(damage, owner_peer_id)
-	
+		var shooter_player = get_shooter_player()
+		if shooter_player and shooter_player.has_method("play_hit_sound_rpc"):
+			shooter_player.rpc("play_hit_sound_rpc")
 	call_deferred("queue_free")
+
+func get_shooter_player() -> Player:
+	var players = get_tree().get_nodes_in_group("player")
+	for player in players:
+		if player.name.to_int() == owner_peer_id:
+			return player
+	return null

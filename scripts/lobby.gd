@@ -34,6 +34,8 @@ func _ready() -> void:
 	#Steam.lobby_message.connect(_on_lobby_message)
 	#Steam.persona_state_change.connect(_on_persona_change)
 	
+	_on_button_lobby_list_pressed()
+	
 	check_command_line()
 
 func _on_players_updated(_players: Dictionary) -> void:
@@ -221,3 +223,6 @@ func _on_button_lobby_list_pressed() -> void:
 func _on_button_start_game_pressed() -> void:
 	if NetworkManager.is_server():
 		NetworkManager.rpc("start_game")
+
+func _on_button_back_pressed() -> void:
+	NetworkManager.rpc("leave_lobby")
