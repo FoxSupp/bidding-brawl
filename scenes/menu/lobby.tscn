@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://br4t2att6xano"]
+[gd_scene load_steps=3 format=3 uid="uid://br4t2att6xano"]
 
 [ext_resource type="Script" uid="uid://c8h0ypa4hh1h4" path="res://scripts/lobby.gd" id="1_5k83l"]
+[ext_resource type="PackedScene" uid="uid://csvyydtnk1vn3" path="res://scenes/menu/player_slot.tscn" id="2_5k83l"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -64,6 +65,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="PlayerSlot" parent="Lobby/ContainerPlayers" instance=ExtResource("2_5k83l")]
+layout_mode = 2
+
+[node name="PlayerSlot2" parent="Lobby/ContainerPlayers" instance=ExtResource("2_5k83l")]
+layout_mode = 2
+
+[node name="PlayerSlot3" parent="Lobby/ContainerPlayers" instance=ExtResource("2_5k83l")]
+layout_mode = 2
+
+[node name="PlayerSlot4" parent="Lobby/ContainerPlayers" instance=ExtResource("2_5k83l")]
+layout_mode = 2
+
 [node name="ButtonStartGame" type="Button" parent="Lobby"]
 layout_mode = 0
 offset_top = 597.0
@@ -72,6 +85,44 @@ offset_bottom = 648.0
 disabled = true
 text = "Start Game"
 
+[node name="ChatBackground" type="Panel" parent="Lobby"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.448
+anchor_top = 0.429
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.0960083
+offset_top = 0.0349884
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Chat" type="RichTextLabel" parent="Lobby/ChatBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 32
+scroll_active = false
+scroll_following = true
+shortcut_keys_enabled = false
+
+[node name="ButtonBack" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -257.0
+offset_top = -51.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Back"
+
 [connection signal="pressed" from="LobbyList/ButtonHost" to="." method="_on_button_host_pressed"]
 [connection signal="pressed" from="LobbyList/ButtonLobbyList" to="." method="_on_button_lobby_list_pressed"]
 [connection signal="pressed" from="Lobby/ButtonStartGame" to="." method="_on_button_start_game_pressed"]
+[connection signal="pressed" from="ButtonBack" to="." method="_on_button_back_pressed"]

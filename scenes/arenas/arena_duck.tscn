@@ -213,7 +213,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_3kyg7")
 sources/1 = SubResource("TileSetAtlasSource_ulv6l")
 
-[node name="ArenaFortress" type="Node2D"]
+[node name="ArenaFortress" type="Node2D" groups=["arena"]]
 
 [node name="Foreground" type="TileMapLayer" parent="."]
 z_index = -80
@@ -270,5 +270,10 @@ offset_bottom = 1632.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.246693, 0.219333, 0.317525, 1)
+
+[node name="SpectatingCam" type="Camera2D" parent="."]
+position = Vector2(1, 23)
+enabled = false
+zoom = Vector2(0.775, 0.775)
 
 [editable path="SpawnPositions"]

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Bidding-Brawl"
-config/version="1.2.0"
+config/version="1.0.0"
 run/main_scene="uid://dxpt7g0id8eq6"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -35,6 +35,8 @@ window/stretch/mode="canvas_items"
 [global_group]
 
 sound_blip="All buttons with this Group make the Blip Sound"
+arena=""
+player=""
 
 [gui]
 

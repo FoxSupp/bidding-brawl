@@ -11,7 +11,6 @@ const LOBBY_SCENE = preload("res://scenes/menu/lobby.tscn")
 const GAME_SCENE = preload("res://scenes/game.tscn")
 const BIDDING_SCENE = preload("res://scenes/bidding/bidding_menu.tscn")
 const WINNING_SCENE = preload("res://scenes/menu/winning_display.tscn")
-const LOBBY_LIST_SCENE = preload("res://scenes/menu/lobby_list.tscn")
 const MAX_PLAYERS: int = 4
 
 var player_name: String = ""
@@ -48,15 +47,11 @@ func host() -> void:
 	peer = SteamMultiplayerPeer.new()
 	peer.create_host(0)
 	multiplayer.multiplayer_peer = peer
-	print(multiplayer)
 	register_player(player_name, Steam.getSteamID())
 
 func join_lobby(lobby_id: int) -> void:
 	peer = SteamMultiplayerPeer.new()
-	print("Lobby ID ", lobby_id)
 	var id := Steam.getLobbyOwner(lobby_id)
-	print("lobby_ID", lobby_id)
-	print("Owner_ID", id)
 	
 	var err: Error = peer.create_client(Steam.getLobbyOwner(lobby_id), 0)
 	if err != OK:
@@ -140,6 +135,8 @@ func _on_server_disconnected() -> void:
 
 @rpc("authority", "call_local")
 func change_to_bidding() -> void:
+	# Add small delay to ensure all clients are ready for scene transition
+	await get_tree().create_timer(0.5).timeout
 	_change_scene(BIDDING_SCENE)
 
 @rpc("authority", "call_local")
@@ -152,11 +149,15 @@ func change_to_lobby() -> void:
 
 @rpc("authority", "call_local")
 func start_game() -> void:
-	print("start_game called on peer: ", multiplayer.get_unique_id())
-	print("is_server: ", multiplayer.is_server())
-	print("CHANGE SCENE")
 	_change_scene(GAME_SCENE)
 
+@rpc("any_peer", "call_local")
+func leave_lobby() -> void:
+	if peer:
+		peer.close()
+		multiplayer.multiplayer_peer = null
+	#players.clear()
+	_change_scene(MENU_SCENE)
 
 @rpc("any_peer")
 func register_player(username: String, steam_id: int = 0) -> void:

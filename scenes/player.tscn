@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bi1pll6ib7wfv"]
+[gd_scene load_steps=30 format=3 uid="uid://bi1pll6ib7wfv"]
 
 [ext_resource type="Script" uid="uid://vxnkpoaq5sya" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cfx40nmtiadu8" path="res://scripts/player_input.gd" id="2_g2els"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://de2oeqqafk7of" path="res://assets/sounds/laserShoot.wav" id="3_qhqgy"]
 [ext_resource type="AudioStream" uid="uid://urnwt26ltyd7" path="res://assets/sounds/jump.wav" id="4_dqkch"]
 [ext_resource type="Texture2D" uid="uid://dlfhl2qesf4mf" path="res://assets/sprites/crosshair.png" id="4_tuyoq"]
+[ext_resource type="AudioStream" uid="uid://buhd47j3ydhkq" path="res://assets/sounds/hitHurt.wav" id="7_fjrip"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g2els"]
 bg_color = Color(1, 0, 0.0784314, 1)
@@ -190,6 +191,9 @@ properties/9/replication_mode = 1
 properties/10/path = NodePath(".:current_health")
 properties/10/spawn = true
 properties/10/replication_mode = 1
+properties/11/path = NodePath("Sprite:flip_h")
+properties/11/spawn = true
+properties/11/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 properties/0/path = NodePath("InputSynch:move_input")
@@ -205,7 +209,7 @@ properties/3/path = NodePath("InputSynch:fire_input")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_3vyb7")
 
 [node name="LabelPlayername" type="Label" parent="."]
@@ -307,3 +311,7 @@ stream = ExtResource("4_dqkch")
 volume_db = -20.0
 pitch_scale = 1.4
 bus = &"SoundEffect"
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_fjrip")
+volume_db = -20.0

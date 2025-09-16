@@ -3,6 +3,8 @@ extends Control
 const PACKET_READ_LIMIT: int = 32
 
 signal lobby_updated
+signal player_joined(player_name: String)
+signal player_left(player_name: String)
 
 const PLAYER_SLOT_SCENE = preload("res://scenes/menu/player_slot.tscn")
 
@@ -11,11 +13,15 @@ var lobby_id: int = 0
 var lobby_members: Array = []
 var lobby_members_max: int = 4
 var lobby_vote_kick: bool = false
-var steam_id: int = 0
+#var steam_id: int = 0
 var steam_username: String = ""
 
 func _ready() -> void:
 	lobby_updated.connect(_update_lobby_ui)
+	
+	player_joined.connect(_on_player_joined)
+	player_left.connect(_on_player_left)
+	
 	NetworkManager.players_updated.connect(_on_players_updated)
 	
 	Steam.join_requested.connect(_on_lobby_join_requested)
@@ -27,6 +33,8 @@ func _ready() -> void:
 	#Steam.lobby_invite.connect(_on_lobby_invite)
 	#Steam.lobby_message.connect(_on_lobby_message)
 	#Steam.persona_state_change.connect(_on_persona_change)
+	
+	_on_button_lobby_list_pressed()
 	
 	check_command_line()
 
@@ -48,7 +56,6 @@ func create_lobby() -> void:
 		Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, lobby_members_max)
 
 func join_lobby(this_lobby_id: int) -> void:
-	print("Attempting to join lobby %s" % this_lobby_id)
 	Steam.joinLobby(this_lobby_id)
 
 func get_lobby_members() -> void:
@@ -78,8 +85,6 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 func _on_lobby_joined(this_lobby_id: int, _permission: int, _locked: bool, response: int) -> void:
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		lobby_id = this_lobby_id
-		print(Steam.getLobbyOwner(lobby_id))
-		print(Steam.getSteamID())
 		if Steam.getLobbyOwner(lobby_id) != Steam.getSteamID():
 			NetworkManager.join_lobby(lobby_id)
 		emit_signal("lobby_updated")
@@ -125,11 +130,17 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	var owner_name: String = Steam.getFriendPersonaName(friend_id)
-	print("Joining %s's lobby..." % owner_name)
 	join_lobby(this_lobby_id)
 
 func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id: int, chat_state: int) -> void:
 	emit_signal("lobby_updated")
+	
+	match chat_state:
+		Steam.CHAT_MEMBER_STATE_CHANGE_ENTERED:
+			emit_signal("player_joined", Steam.getFriendPersonaName(change_id))
+		Steam.CHAT_MEMBER_STATE_CHANGE_LEFT:
+			emit_signal("player_left", Steam.getFriendPersonaName(change_id))
+	print(Steam.getFriendPersonaName(change_id))
 
 func _update_lobby_ui() -> void:
 	get_lobby_members()
@@ -196,14 +207,22 @@ func _update_start_button() -> void:
 	else:
 		$Lobby/ButtonStartGame.disabled = true
 
+func _on_player_joined(player_name: String) -> void:
+	$Lobby/ChatBackground/Chat.text += "%s joined the Game\n-------------------------------" % player_name
+
+func _on_player_left(player_name: String) -> void:
+	$Lobby/ChatBackground/Chat.text += "%s left the Game\n-------------------------------" % player_name
+
 func _on_button_host_pressed() -> void:
 	create_lobby()
 
 func _on_button_lobby_list_pressed() -> void:
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
-	print("Requesting a lobby list")
 	Steam.requestLobbyList()
 
 func _on_button_start_game_pressed() -> void:
 	if NetworkManager.is_server():
 		NetworkManager.rpc("start_game")
+
+func _on_button_back_pressed() -> void:
+	NetworkManager.rpc("leave_lobby")

@@ -38,7 +38,7 @@ func _process(_delta: float) -> void:
 	if all_ready:
 		rpc("update_all_ready_ui", timer_start_round.time_left)
 		if timer_start_round.is_stopped():
-			update_highest_bid_display()
+			call_deferred("update_highest_bid_display")
 			timer_start_round.start(NEW_ROUND_TIMER)
 			timer_start_round.timeout.connect(func(): NetworkManager.rpc("start_game"))
 	else:
@@ -46,15 +46,24 @@ func _process(_delta: float) -> void:
 
 func update_highest_bid_display():
 	"""Updates the UI to show the highest bidder for each upgrade slot"""
+	# Wait for scene to be fully loaded before making RPC calls
+	await get_tree().process_frame
+	
 	for upgrade in bidding_manager.available_upgrades:
 		var slot = upgrade_slots.get_node_or_null(str(upgrade.id))
+		if not slot:
+			print("WARNING: Upgrade slot ", upgrade.id, " not found, skipping update")
+			continue
+			
 		var highest_bidder_id = bidding_manager.get_highest_bid(upgrade.id)
 		if highest_bidder_id != 0:
 			var highest_bid_player = SessionManager.player_stats[highest_bidder_id]
-			slot.rpc("update_highest_bid_ui", highest_bid_player["username"])
+			# Use call_deferred to ensure the node exists when RPC is called
+			slot.call_deferred("rpc", "update_highest_bid_ui", highest_bid_player["username"])
 			SessionManager.add_upgrade(highest_bidder_id, upgrade.upgrade.id)
 		else:
-			slot.rpc("update_highest_bid_ui", "None")
+			# Use call_deferred to ensure the node exists when RPC is called
+			slot.call_deferred("rpc", "update_highest_bid_ui", "None")
 
 @rpc("any_peer", "call_local")
 func ready_player():

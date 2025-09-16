@@ -29,8 +29,9 @@ func _on_all_players_in_game() -> void:
 func _select_and_sync_arena() -> void:
 	# Statische Arena-Liste statt dynamisches Laden
 	var arena_scenes = [
-		"res://scenes/arenas/arena_duck.tscn",
-		"res://scenes/arenas/arena_fortress.tscn"
+		#"res://scenes/arenas/arena_duck.tscn",
+		#"res://scenes/arenas/arena_fortress.tscn"
+		"res://scenes/arenas/arena_2.tscn"
 	]
 	
 	if arena_scenes.size() > 0:

@@ -13,7 +13,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	# Sample on physics frames and use pressed state to avoid one-frame misses over network
 	move_input = Input.get_axis("move_left", "move_right")
-	jump_input = Input.is_action_pressed("jump")
+	jump_input = Input.is_action_just_pressed("jump")
 	mouse_pos = get_global_mouse_position()
 	fire_input = Input.is_action_pressed("fire")
 	
