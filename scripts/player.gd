@@ -37,6 +37,7 @@ var upgrade_max_health: int = 0
 var upgrade_jump_height: float = 0.0
 var upgrade_multijump_count: int = 0
 var upgrade_bounce_count: int = 0
+var upgrade_homing_time: float = 0
 
 var upgrades: Array[UpgradeBase] = []
 
@@ -178,6 +179,7 @@ func _shoot_bullet(pos: Vector2, dir: Vector2):
 	if "speed" in projectile: projectile.speed = 900
 	if "lifetime" in projectile: projectile.lifetime = 10
 	if "bouce" in projectile: projectile.bounce = upgrade_bounce_count
+	if "homing_time" in projectile: projectile.homing_time = upgrade_homing_time
 	projectiles_root.add_child(projectile, true)
 	
 	# Shoot Sound über RPC - alle hören es, Schütze lauter

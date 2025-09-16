@@ -11,6 +11,7 @@ func _ready() -> void:
 		UpgradeJumpHeight.new(),
 		UpgradeMultijump.new(),
 		UpgradeBulletBounce.new(),
+		UpgradeHomingBullet.new(),
 	]
 
 func apply_upgrade(player: Player, upgrade_id: String) -> bool:

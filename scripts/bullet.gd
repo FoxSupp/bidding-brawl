@@ -6,6 +6,8 @@ extends RigidBody2D
 @export var owner_peer_id: int
 @export var lifetime: float
 @export var bounce: int = 0
+@export var homing_time: float = 0.1
+
 
 
 func _ready() -> void:
@@ -14,12 +16,40 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
-		# Rotate the bullet to match its current movement direction (falling or rising)
+	
+	if homing_time > 0:
+		homing_time -= delta
+		var target_player = get_target_player()
+		if target_player:
+			# Direct smooth movement towards target (position-based)
+			var move_speed = speed * delta
+			global_position = global_position.move_toward(target_player.global_position, move_speed)
+			# Set rotation to face the target
+			rotation = (target_player.global_position - global_position).angle()
+		
+		if homing_time <= 0:
+			homing_time = 0.0
+			# Switch back to velocity-based movement
+			var final_direction = (get_target_player().global_position - global_position).normalized() if get_target_player() else dir
+			linear_velocity = final_direction * speed
+
 	if linear_velocity.length() > 0:
 		rotation = linear_velocity.angle()
 	lifetime -= delta
 	if lifetime <= 0:
 		call_deferred("queue_free")
+
+func get_target_player() -> Player:
+	var players = get_tree().get_nodes_in_group("player")
+	var nearest_player: Player = null
+	var min_dist: float = INF
+	for player in players:
+		if player.name.to_int() != owner_peer_id:
+			var dist = global_position.distance_to(player.global_position)
+			if dist < min_dist:
+				min_dist = dist
+				nearest_player = player
+	return nearest_player
 
 func _on_body_entered(body: Node) -> void:
 	if not is_multiplayer_authority():
