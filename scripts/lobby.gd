@@ -43,7 +43,6 @@ func create_lobby() -> void:
 
 func join_lobby(this_lobby_id: int) -> void:
 	print("Attempting to join lobby %s" % this_lobby_id)
-	
 	Steam.joinLobby(this_lobby_id)
 
 func get_lobby_members() -> void:
@@ -68,12 +67,19 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		
-		emit_signal("lobby_updated")
+		#emit_signal("lobby_updated")
+		NetworkManager.host()
+		
 
 func _on_lobby_joined(this_lobby_id: int, _permission: int, _locked: bool, response: int) -> void:
+	print("JOIN")
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		lobby_id = this_lobby_id
-		
+		print(Steam.getLobbyOwner(lobby_id))
+		print(Steam.getSteamID())
+		if Steam.getLobbyOwner(lobby_id) != Steam.getSteamID():
+			print("AA")
+			NetworkManager.join_lobby(lobby_id)
 		emit_signal("lobby_updated")
 	else:
 		# Get the failure reason
@@ -126,6 +132,9 @@ func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id:
 
 func _update_lobby_ui() -> void:
 	get_lobby_members()
+	print("Connected Peers ", multiplayer.get_peers())
+	if NetworkManager.is_server():
+		$Lobby/ButtonStartGame.disabled = false
 	$LobbyList.hide()
 	$Lobby.show()
 	if lobby_id != 0:
@@ -143,3 +152,7 @@ func _on_button_lobby_list_pressed() -> void:
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	print("Requesting a lobby list")
 	Steam.requestLobbyList()
+
+func _on_button_start_game_pressed() -> void:
+	if NetworkManager.is_server():
+		NetworkManager.rpc("start_game")

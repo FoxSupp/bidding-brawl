@@ -64,5 +64,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ButtonStartGame" type="Button" parent="Lobby"]
+layout_mode = 0
+offset_top = 597.0
+offset_right = 257.0
+offset_bottom = 648.0
+disabled = true
+text = "Start Game"
+
 [connection signal="pressed" from="LobbyList/ButtonHost" to="." method="_on_button_host_pressed"]
 [connection signal="pressed" from="LobbyList/ButtonLobbyList" to="." method="_on_button_lobby_list_pressed"]
+[connection signal="pressed" from="Lobby/ButtonStartGame" to="." method="_on_button_start_game_pressed"]

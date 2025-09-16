@@ -9,7 +9,6 @@ const PLAYER_SCENE = preload("res://scenes/player.tscn")
 var win_count: int = 10
 
 func _ready() -> void:
-	
 	# All clients (including server) connect to the signal
 	if not NetworkManager.arena_selected.is_connected(_load_arena):
 		NetworkManager.arena_selected.connect(_load_arena)

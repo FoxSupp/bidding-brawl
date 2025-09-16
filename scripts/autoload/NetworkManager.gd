@@ -15,7 +15,7 @@ const LOBBY_LIST_SCENE = preload("res://scenes/menu/lobby_list.tscn")
 const MAX_PLAYERS: int = 4
 
 var player_name: String = ""
-var peer: ENetMultiplayerPeer
+var peer: SteamMultiplayerPeer
 var players: Dictionary = {}
 var game_started: bool = false
 var game_version: String
@@ -37,23 +37,26 @@ func _process(_delta: float) -> void:
 			emit_signal("all_in_game")
 
 func host() -> void:
-	peer = ENetMultiplayerPeer.new()
-	var err: Error = peer.create_server(8910, MAX_PLAYERS)
-	if err != OK:
-		return
-	
+	#peer = ENetMultiplayerPeer.new()
+	peer = SteamMultiplayerPeer.new()
+	peer.create_host(0)
 	multiplayer.multiplayer_peer = peer
-	_change_scene(LOBBY_SCENE)
+	print(multiplayer)
+	register_player(player_name)
 
-func join() -> void:
-	peer = ENetMultiplayerPeer.new()
-	var err: Error = peer.create_client("127.0.0.1", 8910)
+func join_lobby(lobby_id: int) -> void:
+	peer = SteamMultiplayerPeer.new()
+	print("Lobby ID ", lobby_id)
+	var id := Steam.getLobbyOwner(lobby_id)
+	print("lobby_ID", lobby_id)
+	print("Owner_ID", id)
+	
+	var err: Error = peer.create_client(Steam.getLobbyOwner(lobby_id), 0)
 	if err != OK:
+		print("CLIENT_ERROR")
 		return
 	
 	multiplayer.multiplayer_peer = peer
-	
-	_change_scene(LOBBY_LIST_SCENE)
 
 func disconnect_from_server() -> void:
 	if multiplayer.multiplayer_peer:
@@ -64,7 +67,7 @@ func disconnect_from_server() -> void:
 	emit_signal("players_updated", players)
 
 func is_server() -> bool:
-	return multiplayer.is_server()
+	return multiplayer.multiplayer_peer != null and multiplayer.is_server()
 
 func get_players() -> Dictionary:
 	return players.duplicate(true)
@@ -124,7 +127,11 @@ func change_to_lobby() -> void:
 
 @rpc("authority", "call_local")
 func start_game() -> void:
+	print("start_game called on peer: ", multiplayer.get_unique_id())
+	print("is_server: ", multiplayer.is_server())
+	print("CHANGE SCENE")
 	_change_scene(GAME_SCENE)
+
 
 @rpc("any_peer")
 func register_player(username: String) -> void:
