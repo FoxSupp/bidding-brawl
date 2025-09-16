@@ -27,20 +27,14 @@ func _on_all_players_in_game() -> void:
 	call_deferred("_spawn_all_players")
 
 func _select_and_sync_arena() -> void:
-	var arena_scenes = []
-	var dir = DirAccess.open("res://scenes/arenas")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".tscn"):
-				arena_scenes.append("res://scenes/arenas/" + file_name)
-			file_name = dir.get_next()
-		dir.list_dir_end()
+	# Statische Arena-Liste statt dynamisches Laden
+	var arena_scenes = [
+		"res://scenes/arenas/arena_duck.tscn",
+		"res://scenes/arenas/arena_fortress.tscn"
+	]
 	
 	if arena_scenes.size() > 0:
 		var random_arena_path = arena_scenes[randi() % arena_scenes.size()]
-		# Sync arena selection to all clients (including server via call_local)
 		NetworkManager.rpc("sync_arena_selection", random_arena_path)
 
 func _load_arena(arena_path: String) -> void:
@@ -53,6 +47,15 @@ func _load_arena(arena_path: String) -> void:
 		print("ERROR: Failed to load arena scene: ", arena_path)
 
 func _spawn_all_players() -> void:
+	# Warte bis die Game-Scene vollständig geladen ist
+	await get_tree().process_frame
+	
+	if not spawn_positions:
+		print("ERROR: spawn_positions is null! Arena may not be loaded yet.")
+		await get_tree().create_timer(0.1).timeout
+		call_deferred("_spawn_all_players")
+		return
+	
 	var spawn_points: Array[Node] = spawn_positions.get_children()
 	
 	_add_players_to_session()

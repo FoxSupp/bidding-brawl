@@ -61,24 +61,20 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		print("Created a lobby: %s" % lobby_id)
 		
 		Steam.setLobbyJoinable(lobby_id, true)
-		Steam.setLobbyData(lobby_id, "name", "TEST'S Lobby")
-		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
+		Steam.setLobbyData(lobby_id, "name", Steam.getPersonaName() + "'s Lobby")
 		Steam.setLobbyData(lobby_id, "bidding", "brawl")
 
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		
 		#emit_signal("lobby_updated")
 		NetworkManager.host()
-		
 
 func _on_lobby_joined(this_lobby_id: int, _permission: int, _locked: bool, response: int) -> void:
-	print("JOIN")
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		lobby_id = this_lobby_id
 		print(Steam.getLobbyOwner(lobby_id))
 		print(Steam.getSteamID())
 		if Steam.getLobbyOwner(lobby_id) != Steam.getSteamID():
-			print("AA")
 			NetworkManager.join_lobby(lobby_id)
 		emit_signal("lobby_updated")
 	else:
@@ -100,12 +96,12 @@ func _on_lobby_joined(this_lobby_id: int, _permission: int, _locked: bool, respo
 		print("Failed to join this chat room: %s" % fail_reason)
 		_on_button_lobby_list_pressed()
 
+""" Create Lobby List Buttons """
 func _on_lobby_match_list(these_lobbies: Array) -> void:
 	for c in $LobbyList/ScrollContainer/VBoxContainer.get_children():
 		c.queue_free()
 	for this_lobby in these_lobbies:
 		var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
-		var lobby_mode: String = Steam.getLobbyData(this_lobby, "mode")
 		var bidding_brawl: String = Steam.getLobbyData(this_lobby, "bidding")
 		
 		if bidding_brawl != "brawl":
@@ -114,7 +110,7 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 		var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
 		# Create a button for the lobby
 		var lobby_button: Button = Button.new()
-		lobby_button.set_text("Lobby %s: %s [%s] - %s Player(s)" % [this_lobby, lobby_name, lobby_mode, lobby_num_members])
+		lobby_button.set_text("%s currently %s of 4 Players" % [lobby_name, lobby_num_members])
 		lobby_button.set_size(Vector2(800, 50))
 		lobby_button.set_name("lobby_%s" % this_lobby)
 		lobby_button.connect("pressed", Callable(self, "join_lobby").bind(this_lobby))
@@ -127,12 +123,10 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	join_lobby(this_lobby_id)
 
 func _on_lobby_chat_update(this_lobby_id: int, change_id: int, making_change_id: int, chat_state: int) -> void:
-	print(lobby_members)
 	emit_signal("lobby_updated")
 
 func _update_lobby_ui() -> void:
 	get_lobby_members()
-	print("Connected Peers ", multiplayer.get_peers())
 	if NetworkManager.is_server():
 		$Lobby/ButtonStartGame.disabled = false
 	$LobbyList.hide()
