@@ -6,6 +6,7 @@ extends Node
 const WIN_COUNT: int = 10
 const MAX_PLAYERS: int = 4
 const LOBBY_MEMBERS_MAX: int = 4
+const GAME_START_COUNTDOWN: int = 5
 
 # Player Stats
 const PLAYER_STARTING_MONEY: int = 200
