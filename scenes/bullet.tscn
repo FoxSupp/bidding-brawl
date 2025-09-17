@@ -6,9 +6,8 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_y25gk"]
 bounce = 0.5
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y25gk"]
-radius = 4.0
-height = 20.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_y25gk"]
+radius = 6.08276
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mkf8s"]
 properties/0/path = NodePath(".:position")
@@ -35,11 +34,12 @@ script = ExtResource("1_mkf8s")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708
+scale = Vector2(0.891897, 0.891897)
 texture = ExtResource("2_y25gk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_y25gk")
+shape = SubResource("CircleShape2D_y25gk")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_mkf8s")

@@ -1,10 +1,15 @@
 extends Control
 
+
+@onready var timer_start_game: Timer = $TimerStartGame
+@onready var label_start_game: Label = $LabelStartGame
+
 const PACKET_READ_LIMIT: int = 32
 
 signal lobby_updated
 signal player_joined(player_name: String)
 signal player_left(player_name: String)
+signal s_start_game
 
 const PLAYER_SLOT_SCENE = preload("res://scenes/menu/player_slot.tscn")
 
@@ -18,6 +23,8 @@ var steam_username: String = ""
 
 func _ready() -> void:
 	lobby_updated.connect(_update_lobby_ui)
+	
+	
 	
 	player_joined.connect(_on_player_joined)
 	player_left.connect(_on_player_left)
@@ -37,6 +44,9 @@ func _ready() -> void:
 	_on_button_lobby_list_pressed()
 	
 	check_command_line()
+
+func _process(delta: float) -> void:
+	label_start_game.text = "Game starts in %s" % str(int(timer_start_game.time_left+1))
 
 func _on_players_updated(_players: Dictionary) -> void:
 	# Update the lobby UI when player data changes
@@ -81,6 +91,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		
 		#emit_signal("lobby_updated")
 		NetworkManager.host()
+		s_start_game.connect(func(): rpc("_on_start_game"))
 
 func _on_lobby_joined(this_lobby_id: int, _permission: int, _locked: bool, response: int) -> void:
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
@@ -221,6 +232,18 @@ func _on_button_lobby_list_pressed() -> void:
 	Steam.requestLobbyList()
 
 func _on_button_start_game_pressed() -> void:
+	rpc("start_countdown")
+
+@rpc("authority", "call_local")
+func start_countdown() -> void:
+	label_start_game.show()
+	timer_start_game.start()
+	await timer_start_game.timeout
+	emit_signal("s_start_game")
+	
+
+@rpc("authority", "call_local")
+func _on_start_game() -> void:
 	if NetworkManager.is_server():
 		NetworkManager.rpc("start_game")
 

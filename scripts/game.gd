@@ -123,6 +123,7 @@ func _end_game(winner_id: int):
 	NetworkManager.game_started = false
 	await get_tree().create_timer(1).timeout
 	if multiplayer.is_server():
+		print(SessionManager.player_stats[winner_id]["wins"])
 		if SessionManager.player_stats[winner_id]["wins"] >= win_count:
 			SessionManager.winner = SessionManager.player_stats[winner_id]
 			NetworkManager.rpc("change_to_winning")

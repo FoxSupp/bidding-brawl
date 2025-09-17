@@ -9,9 +9,9 @@ func newPlayer(peer_id: int) -> void:
 	if not multiplayer.is_server(): return
 	player_stats[peer_id] = {
 		"username": NetworkManager.get_username(peer_id),
-		"money": 0,
+		"money": 200,
 		"kills": 0,
-		"wins": 200,
+		"wins": 0,
 		"winstreak": 0,
 		"losingstreak": 0,
 		"upgrades": []
