@@ -27,8 +27,6 @@ func _setup_connections() -> void:
 		Steam.lobby_joined.connect(_on_lobby_joined)
 		Steam.lobby_match_list.connect(_on_lobby_match_list)
 		Steam.lobby_chat_update.connect(_on_lobby_chat_update)
-		Steam.join_game_requested.connect(_on_game_join_requested)
-		Steam.lobby_invite.connect(_on_lobby_invite_received)
 	
 	# NetworkManager signals
 	NetworkManager.players_updated.connect(_on_players_updated)
@@ -76,11 +74,15 @@ func leave_lobby() -> void:
 	# Clean disconnect from NetworkManager first
 	NetworkManager.disconnect_from_server()
 	
-	# Handle Steam lobby (do not change scene here; NetworkManager already did)
+	# Handle Steam lobby
 	if is_host:
 		_destroy_steam_lobby()
 	else:
 		_leave_steam_lobby()
+	NetworkManager.leave_lobby()
+	
+	# Go to main menu
+	NetworkManager._change_scene(NetworkManager.MENU_SCENE_PATH)
 
 func _destroy_steam_lobby() -> void:
 	print("Host destroying lobby ", lobby_id)
@@ -177,11 +179,7 @@ func _on_lobby_match_list(lobbies: Array) -> void:
 		
 		$LobbyList/ScrollContainer/VBoxContainer.add_child(button)
 
-func _on_game_join_requested(this_lobby_id: int) -> void:
-	join_lobby(this_lobby_id)
 
-func _on_lobby_invite_received(this_lobby_id: int) -> void:
-	print("Lobby invite received: ", this_lobby_id)
 
 #endregion
 
@@ -251,11 +249,6 @@ func _on_button_start_game_pressed() -> void:
 	if not _am_i_host():
 		return
 	
-	rpc("start_countdown")
-
-@rpc("authority", "call_local")
-func start_countdown() -> void:
-
 	# Start countdown
 	label_start_game.show()
 	timer_start_game.start(3.0)

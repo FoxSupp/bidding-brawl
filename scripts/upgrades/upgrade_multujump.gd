@@ -4,7 +4,7 @@ extends UpgradeBase
 func _init() -> void:
 	id += "multijump"
 	name = "Multijump"
-	description = "Jump +1 Time"
+	description = "Jump +" + str(GameConfig.MULTIJUMP_AMOUNT) + " Time"
 
 func apply(player: Player) -> void:
-	player.upgrade_multijump_count += 1
+	player.upgrade_multijump_count += GameConfig.MULTIJUMP_AMOUNT

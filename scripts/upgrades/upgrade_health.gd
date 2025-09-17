@@ -4,7 +4,7 @@ extends UpgradeBase
 func _init() -> void:
 	id += "health"
 	name = "Health"
-	description = "+20 Max Life"
+	description = "+" + str(GameConfig.HEALTH_UPGRADE_AMOUNT) + " Max Life"
 
 func apply(player: Player) -> void:
-	player.upgrade_max_health += 20
+	player.upgrade_max_health += GameConfig.HEALTH_UPGRADE_AMOUNT
