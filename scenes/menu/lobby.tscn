@@ -12,6 +12,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5k83l")
 
+[node name="Background" type="ColorRect" parent="."]
+process_mode = 4
+z_index = -100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.352941, 0.313726, 0.607843, 1)
+
 [node name="LobbyList" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -25,8 +36,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -352.0
-offset_bottom = -598.0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = -332.0
+offset_bottom = -583.0
 grow_horizontal = 2
 grow_vertical = 2
 

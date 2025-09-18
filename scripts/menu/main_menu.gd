@@ -21,11 +21,14 @@ extends Control
 @onready var menu_button_credits: Button = $MainMenu/VBoxContainer/ButtonCredits
 @onready var menu_button_how_to: Button = $MainMenu/VBoxContainer/ButtonHowTo
 @onready var menu_button_quit_game: Button = $MainMenu/VBoxContainer/ButtonQuitGame
+@onready var dialog_button_close: Button = $MenuDialog/Background/ButtonClose
 
 
 func _ready() -> void:
 	_connect_main_menu_buttons()
 	_connect_back_buttons()
+	_connect_dialog_signals()
+	_connect_steamworks_signals()
 
 func _connect_main_menu_buttons() -> void:
 	menu_button_multiplayer.pressed.connect(_on_menu_button_multiplayer_pressed)
@@ -33,12 +36,29 @@ func _connect_main_menu_buttons() -> void:
 	menu_button_credits.pressed.connect(_on_menu_button_credits_pressed)
 	menu_button_how_to.pressed.connect(_on_menu_button_how_to_pressed)
 	menu_button_quit_game.pressed.connect(_on_menu_button_quit_game_pressed)
+	dialog_button_close.pressed.connect(_close_dialog)
 
 func _connect_back_buttons() -> void:
 	mult_button_back.pressed.connect(_on_button_back_pressed)
 	opt_button_back.pressed.connect(_on_button_back_pressed)
 	cred_button_back.pressed.connect(_on_button_back_pressed)
 	how_to_button_back.pressed.connect(_on_button_back_pressed)
+
+func _connect_dialog_signals() -> void:
+	pass
+
+func _close_dialog() -> void:
+	$MenuDialog.hide()
+
+func _connect_steamworks_signals() -> void:
+	Steamworks.steam_error_occurred.connect(_on_steamworks_error)
+	# Initialisiere Steam erst jetzt
+	Steamworks.ensure_steam_initialized()
+
+func _on_steamworks_error(error_message: String, error_type: String) -> void:
+	$MenuDialog.show()
+	$MenuDialog/Background/DialogText.text = error_message
+	print("Steam error [%s]: %s" % [error_type, error_message])
 
 func _on_menu_button_multiplayer_pressed() -> void:
 	NetworkManager._change_scene(preload("res://scenes/menu/lobby.tscn"))

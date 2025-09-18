@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dxpt7g0id8eq6"]
+[gd_scene load_steps=13 format=3 uid="uid://dxpt7g0id8eq6"]
 
 [ext_resource type="Script" uid="uid://ctyom4fcyhjdb" path="res://scripts/menu/multiplayer_menu.gd" id="1"]
 [ext_resource type="Script" uid="uid://u68hcijt7hv2" path="res://scripts/menu/main_menu.gd" id="2_bqqt6"]
@@ -13,6 +13,9 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5dd4i"]
 bg_color = Color(0.21, 0.21, 0.21, 0.756863)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1k4da"]
+bg_color = Color(0, 0, 0, 0.905882)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -457,6 +460,53 @@ texture = ExtResource("8_flqon")
 [node name="Trees" type="Sprite2D" parent="Background"]
 position = Vector2(5, 42)
 texture = ExtResource("9_rcqid")
+
+[node name="MenuDialog" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Background" type="Panel" parent="MenuDialog"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 117.0
+offset_top = 66.0
+offset_right = -118.0
+offset_bottom = -66.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1k4da")
+
+[node name="ButtonClose" type="Button" parent="MenuDialog/Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.405
+anchor_top = 0.884
+anchor_right = 0.595
+anchor_bottom = 1.0
+offset_left = -0.38504
+offset_top = -24.144
+offset_right = 0.384949
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 46
+text = "Close"
+
+[node name="DialogText" type="RichTextLabel" parent="MenuDialog/Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = 34.0
+offset_right = -50.0
+offset_bottom = -116.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 32
+text = "Failed to initialize Steam ich bin dumm mach Steam neu auf du Kek"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="MultiplayerMenu/VBox/Control/ButtonBack" to="MultiplayerMenu" method="_on_button_back_pressed"]
 [connection signal="pressed" from="CreditsMenu/CenterContainer/ButtonBack" to="OptionsMenu" method="_on_button_back_pressed"]
