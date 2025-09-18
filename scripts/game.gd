@@ -5,6 +5,7 @@ extends Node2D
 # Scene references
 var spawn_positions: Node
 @onready var players: Node = $Players
+@onready var scoreboard: Node = $Scoreboard
 
 # Constants
 const PLAYER_SCENE = preload("res://scenes/player.tscn")
@@ -17,6 +18,24 @@ func _ready() -> void:
 	# Connect to all_in_game signal for both arena selection and player spawning
 	NetworkManager.all_in_game.connect(_on_all_players_in_game)
 	NetworkManager.rpc_id(1, "request_set_self_in_game", true)
+
+	add_to_group("game")
+
+
+func _process(_delta: float) -> void:
+	# Handle scoreboard display for the local player
+	var local_player = _get_local_player()
+	if local_player and local_player.input_synch.scoreboard_show:
+		if not scoreboard.visible:
+			scoreboard.show_scoreboard()
+	else:
+		if scoreboard.visible:
+			scoreboard.hide_scoreboard()
+
+func _get_local_player() -> Node:
+	var local_id = multiplayer.get_unique_id()
+	return players.get_node_or_null(str(local_id))
+
 
 func _on_all_players_in_game() -> void:
 	if not multiplayer.is_server():
