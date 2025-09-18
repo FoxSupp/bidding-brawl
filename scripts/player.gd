@@ -200,8 +200,8 @@ func _handle_death() -> void:
 	visible = false
 	collision.disabled = true
 	
-	if input_synch.is_multiplayer_authority():
-		input_synch.set_multiplayer_authority(1)
+	#if input_synch.is_multiplayer_authority():
+		#input_synch.set_multiplayer_authority(1)
 	
 	died.emit(name.to_int())
 

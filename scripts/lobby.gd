@@ -281,13 +281,12 @@ func _on_button_back_pressed() -> void:
 	if timer_start_game.is_stopped():
 		leave_lobby()
 	else:
-		timer_start_game.stop()
-		label_start_game.hide()
+		rpc("stop_countdown")
 
 func _on_button_start_game_pressed() -> void:
 	if not Steamworks._am_i_host():
 		return
-	
+	Steam.setLobbyJoinable(Steamworks.lobby_id, false)
 	rpc("start_countdown")
 
 @rpc("authority", "call_local")
@@ -301,6 +300,13 @@ func start_countdown() -> void:
 	# Start game
 	if NetworkManager.is_server():
 		NetworkManager.rpc("start_game")
+
+@rpc("any_peer", "call_local")
+func stop_countdown() -> void:
+	Steam.setLobbyJoinable(Steamworks.lobby_id, true)
+	timer_start_game.stop()
+	label_start_game.hide()
+	
 
 #endregion
 
