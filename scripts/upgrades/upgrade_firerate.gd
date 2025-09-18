@@ -7,4 +7,4 @@ func _init() -> void:
 	description = "Shoot 10% faster"
 
 func apply(player: Player) -> void:
-	player.upgrade_firerate_multiplier *= 0.9
+	player.upgrade_firerate_multiplier *= GameConfig.FIRERATE_MULTIPLIER

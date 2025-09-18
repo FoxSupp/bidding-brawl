@@ -1,12 +1,13 @@
+## Game Scene Controller
+## Manages arena loading, player spawning, and game flow
 extends Node2D
 
+# Scene references
 var spawn_positions: Node
-
 @onready var players: Node = $Players
 
+# Constants
 const PLAYER_SCENE = preload("res://scenes/player.tscn")
-
-var win_count: int = 10
 
 func _ready() -> void:
 	# All clients (including server) connect to the signal
@@ -27,32 +28,30 @@ func _on_all_players_in_game() -> void:
 	call_deferred("_spawn_all_players")
 
 func _select_and_sync_arena() -> void:
-	# Statische Arena-Liste statt dynamisches Laden
-	var arena_scenes = [
-		#"res://scenes/arenas/arena_duck.tscn",
-		#"res://scenes/arenas/arena_fortress.tscn"
-		"res://scenes/arenas/arena_2.tscn"
-	]
-	
-	if arena_scenes.size() > 0:
-		var random_arena_path = arena_scenes[randi() % arena_scenes.size()]
-		NetworkManager.rpc("sync_arena_selection", random_arena_path)
+	var random_arena_path = GameConfig.get_random_arena()
+	if random_arena_path.is_empty():
+		push_error("No arena scenes available!")
+		return
+		
+	NetworkManager.rpc("sync_arena_selection", random_arena_path)
 
 func _load_arena(arena_path: String) -> void:
 	var arena_scene = load(arena_path)
-	if arena_scene:
-		var arena_instance = arena_scene.instantiate()
-		add_child(arena_instance)
-		spawn_positions = arena_instance.get_node("SpawnPositions")
-	else:
-		print("ERROR: Failed to load arena scene: ", arena_path)
+	if not arena_scene:
+		var error_msg = GameConfig.get_error_message("arena_load_failed", [arena_path])
+		push_error(error_msg)
+		return
+	
+	var arena_instance = arena_scene.instantiate()
+	add_child(arena_instance)
+	spawn_positions = arena_instance.get_node("SpawnPositions")
 
 func _spawn_all_players() -> void:
-	# Warte bis die Game-Scene vollständig geladen ist
+	# Wait until the Game scene is fully loaded
 	await get_tree().process_frame
 	
 	if not spawn_positions:
-		print("ERROR: spawn_positions is null! Arena may not be loaded yet.")
+		push_error(GameConfig.get_error_message("spawn_positions_null"))
 		await get_tree().create_timer(0.1).timeout
 		call_deferred("_spawn_all_players")
 		return
@@ -87,7 +86,7 @@ func add_score(score: int, shooter_id: int) -> void:
 func _on_player_died(_player_id: int) -> void:
 	var alive_players: Array[Node] = players.get_children().filter(func(p): return not p.dead)
 	if alive_players.size() == 1:
-		await get_tree().create_timer(2).timeout
+		await get_tree().create_timer(GameConfig.GAME_END_DELAY).timeout
 		_end_game(alive_players[0].name.to_int())
 
 func _end_game(winner_id: int):
@@ -121,10 +120,10 @@ func _end_game(winner_id: int):
 		NetworkManager.rpc_id(1, "set_player_in_game", player_id, false)
 
 	NetworkManager.game_started = false
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(GameConfig.BIDDING_DESPAWN_DELAY).timeout
 	if multiplayer.is_server():
 		print(SessionManager.player_stats[winner_id]["wins"])
-		if SessionManager.player_stats[winner_id]["wins"] >= win_count:
+		if SessionManager.player_stats[winner_id]["wins"] >= GameConfig.WIN_COUNT:
 			SessionManager.winner = SessionManager.player_stats[winner_id]
 			NetworkManager.rpc("change_to_winning")
 		else:

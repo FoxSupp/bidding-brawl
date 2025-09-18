@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GameConfig="*res://scripts/autoload/game_config.gd"
 Steamworks="*res://scripts/steam/steamworks.gd"
 NetworkManager="*res://scripts/autoload/NetworkManager.gd"
 SessionManager="*res://scripts/autoload/SessionManager.gd"
