@@ -2,6 +2,9 @@
 ## Contains all configurable game values for easy balancing and tweaking
 extends Node
 
+# Project Wide Rules
+const SHOW_ONLY_FRIENDS_LOBBIES: bool = true
+
 # Game Rules
 const WIN_COUNT: int = 10
 const MAX_PLAYERS: int = 4

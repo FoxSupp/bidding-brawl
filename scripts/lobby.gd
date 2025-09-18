@@ -8,7 +8,7 @@ extends Control
 
 # Constants
 const PLAYER_SLOT_SCENE = preload("res://scenes/menu/player_slot.tscn")
-
+const LOBBY_BUTTON_SCENE = preload("res://scenes/menu/lobby_button.tscn")
 # Lobby State (minimal)
 
 
@@ -67,6 +67,29 @@ func leave_lobby() -> void:
 		_destroy_steam_lobby()
 	else:
 		_leave_steam_lobby()
+
+func get_lobbies_with_friends() -> Dictionary:
+	var results: Dictionary = {}
+
+	for i in range(0, Steam.getFriendCount()):
+		var steam_id: int = Steam.getFriendByIndex(i, Steam.FRIEND_FLAG_IMMEDIATE)
+		var game_info: Dictionary = Steam.getFriendGamePlayed(steam_id)
+
+		if game_info.is_empty():
+			# This friend is not playing a game
+			continue
+		else:
+			# They are playing a game, check if it's the same game as ours
+			var app_id: int = game_info['id']
+			var lobby = game_info['lobby']
+
+			if app_id != Steam.getAppID() or lobby == 0:
+				# Either not in this game, or not in a lobby
+				continue
+
+			results[steam_id] = lobby
+
+	return results
 
 func _destroy_steam_lobby() -> void:
 	print("Host destroying lobby ", Steamworks.lobby_id)
@@ -140,30 +163,47 @@ func _on_lobby_match_list(lobbies: Array) -> void:
 	# Clear old buttons
 	for child in $LobbyList/ScrollContainer/VBoxContainer.get_children():
 		child.queue_free()
-	if lobbies.size() <= 0:
-		var text = Label.new()
-		text.text = "No lobbies found"
-		text.add_theme_font_size_override("font_size", 32)
-		text.size = Vector2(800, 50)
-		$LobbyList/ScrollContainer/VBoxContainer.add_child(text)
-		return
-	# Create buttons for valid lobbies
-	for lobby in lobbies:
-		var lobby_name = Steam.getLobbyData(lobby, "name")
-		var lobby_type = Steam.getLobbyData(lobby, "bidding")
-		var member_count = Steam.getNumLobbyMembers(lobby)
-		
-		# Filter valid lobbies
-		if lobby_type != "brawl" or lobby_name.is_empty() or member_count <= 0:
-			pass
-		
-		# Create lobby button
-		var button = Button.new()
-		button.text = "%s (%d/%d players)" % [lobby_name, member_count, GameConfig.LOBBY_MEMBERS_MAX]
-		button.size = Vector2(800, 50)
-		button.pressed.connect(Steamworks.join_lobby.bind(lobby))
-		
-		$LobbyList/ScrollContainer/VBoxContainer.add_child(button)
+	
+	if GameConfig.SHOW_ONLY_FRIENDS_LOBBIES:
+		var friend_lobbies = get_lobbies_with_friends()
+		if friend_lobbies.size() <= 0:
+			var text = Label.new()
+			text.text = "No lobbies found"
+			text.add_theme_font_size_override("font_size", 32)
+			text.size = Vector2(800, 50)
+			$LobbyList/ScrollContainer/VBoxContainer.add_child(text)
+			return
+		for friend_id in friend_lobbies:
+			var friend_lobby_id = friend_lobbies[friend_id]
+			var friend_name = Steam.getFriendPersonaName(friend_id)
+			var member_count = Steam.getNumLobbyMembers(friend_lobby_id)
+			
+			# Create lobby button
+			var lobby_button = LOBBY_BUTTON_SCENE.instantiate()
+			lobby_button.setup_button_data("%s's Lobby (%d/%d players)" % [friend_name, member_count, GameConfig.LOBBY_MEMBERS_MAX], friend_lobby_id)
+			$LobbyList/ScrollContainer/VBoxContainer.add_child(lobby_button)
+	else:
+		if lobbies.size() <= 0:
+			var text = Label.new()
+			text.text = "No lobbies found"
+			text.add_theme_font_size_override("font_size", 32)
+			text.size = Vector2(800, 50)
+			$LobbyList/ScrollContainer/VBoxContainer.add_child(text)
+			return
+		# Create buttons for valid lobbies
+		for lobby in lobbies:
+			var lobby_name = Steam.getLobbyData(lobby, "name")
+			var lobby_type = Steam.getLobbyData(lobby, "bidding")
+			var member_count = Steam.getNumLobbyMembers(lobby)
+			
+			# Filter valid lobbies
+			if lobby_type != "brawl" or lobby_name.is_empty() or member_count <= 0:
+				pass
+			
+			# Create lobby button
+			var lobby_button = LOBBY_BUTTON_SCENE.instantiate()
+			lobby_button.setup_button_data("%s (%d/%d players)" % [lobby_name, member_count, GameConfig.LOBBY_MEMBERS_MAX], lobby)
+			$LobbyList/ScrollContainer/VBoxContainer.add_child(lobby_button)
 
 #endregion
 

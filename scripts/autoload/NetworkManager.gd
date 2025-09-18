@@ -246,7 +246,6 @@ func check_version(client_version: String) -> void:
 		# Disconnect the client
 		multiplayer.multiplayer_peer.disconnect_peer(sender_id)
 	else:
-		print("Version check passed for client %d" % sender_id)
 		rpc_id(sender_id, "version_accepted")
 
 @rpc("authority")
@@ -257,7 +256,6 @@ func version_mismatch(server_version: String) -> void:
 
 @rpc("authority")
 func version_accepted() -> void:
-	print("Version check passed, proceeding with registration")
 	var my_steam_id = Steam.getSteamID()
 	rpc_id(1, "register_player", player_name, my_steam_id)
 
