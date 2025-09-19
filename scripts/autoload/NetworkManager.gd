@@ -206,6 +206,10 @@ func register_player(username: String, steam_id: int = 0) -> void:
 		"steam_id": steam_id
 	}
 	_broadcast_players()
+	
+	# Sync lobby config to newly joined player
+	if is_server():
+		rpc_id(sender_id, "sync_lobby_config", LobbyConfig.get_config_data())
 
 @rpc("authority", "call_local")
 func sync_players(updated: Dictionary) -> void:
@@ -262,6 +266,10 @@ func version_accepted() -> void:
 @rpc("authority", "call_local")
 func sync_arena_selection(arena_path: String) -> void:
 	emit_signal("arena_selected", arena_path)
+
+@rpc("authority", "call_local")
+func sync_lobby_config(config_data: Dictionary) -> void:
+	LobbyConfig.apply_config_data(config_data)
 
 func _broadcast_players() -> void:
 	rpc("sync_players", players)

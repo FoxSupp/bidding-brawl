@@ -1,0 +1,319 @@
+[gd_scene load_steps=2 format=3 uid="uid://ci8p8tvdlnlax"]
+
+[ext_resource type="Script" uid="uid://dd5euvqeyvhu2" path="res://scripts/menu/lobby_config_panel.gd" id="1_8tvdl"]
+
+[node name="LobbyConfigPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8tvdl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Game Configuration"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+text = "Reset"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ConfigContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GameRulesSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="GameRulesLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Game Rules"
+
+[node name="WinCountContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection"]
+layout_mode = 2
+
+[node name="WinCountLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/WinCountContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Win Count:"
+
+[node name="WinCountSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/WinCountContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 50.0
+value = 10.0
+
+[node name="StartingMoneyContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection"]
+layout_mode = 2
+
+[node name="StartingMoneyLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/StartingMoneyContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Starting Money:"
+
+[node name="StartingMoneySpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/StartingMoneyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 50.0
+max_value = 1000.0
+step = 10.0
+value = 200.0
+
+[node name="KillRewardContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection"]
+layout_mode = 2
+
+[node name="KillRewardLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/KillRewardContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Kill Reward:"
+
+[node name="KillRewardSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/KillRewardContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 500.0
+step = 10.0
+value = 100.0
+
+[node name="DeathRewardContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection"]
+layout_mode = 2
+
+[node name="DeathRewardLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/DeathRewardContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Death Reward:"
+
+[node name="DeathRewardSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/DeathRewardContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+step = 5.0
+value = 20.0
+
+[node name="HSeparator1" type="HSeparator" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="PlayerConfigSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="PlayerConfigLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Player Configuration"
+
+[node name="BaseHealthContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection"]
+layout_mode = 2
+
+[node name="BaseHealthLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseHealthContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Base Health:"
+
+[node name="BaseHealthSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseHealthContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 25.0
+max_value = 300.0
+step = 5.0
+value = 100.0
+
+[node name="BaseDamageContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection"]
+layout_mode = 2
+
+[node name="BaseDamageLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseDamageContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Base Damage:"
+
+[node name="BaseDamageSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseDamageContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 5.0
+max_value = 50.0
+value = 10.0
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="WeaponSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="WeaponLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Weapon Configuration"
+
+[node name="ShotCooldownContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection"]
+layout_mode = 2
+
+[node name="ShotCooldownLabelContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection/ShotCooldownContainer"]
+layout_mode = 2
+
+[node name="ShotCooldownLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection/ShotCooldownContainer/ShotCooldownLabelContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Shot Cooldown"
+
+[node name="ShotCooldownValueLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection/ShotCooldownContainer/ShotCooldownLabelContainer"]
+layout_mode = 2
+text = "0.5s"
+
+[node name="ShotCooldownSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection/ShotCooldownContainer"]
+layout_mode = 2
+min_value = 0.1
+max_value = 2.0
+step = 0.05
+value = 0.5
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="UpgradeSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="UpgradeLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Upgrade Configuration"
+
+[node name="FirerateContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection"]
+layout_mode = 2
+
+[node name="FirerateLabelContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/FirerateContainer"]
+layout_mode = 2
+
+[node name="FirerateLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/FirerateContainer/FirerateLabelContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Firerate Multiplier:"
+
+[node name="FirerateValueLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/FirerateContainer/FirerateLabelContainer"]
+layout_mode = 2
+text = "0.90"
+
+[node name="FirerateSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/FirerateContainer"]
+layout_mode = 2
+min_value = 0.5
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="HealthUpgradeContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection"]
+layout_mode = 2
+
+[node name="HealthUpgradeLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HealthUpgradeContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Health Upgrade:"
+
+[node name="HealthUpgradeSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HealthUpgradeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 5.0
+max_value = 50.0
+step = 5.0
+value = 20.0
+
+[node name="SpeedUpgradeContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection"]
+layout_mode = 2
+
+[node name="SpeedUpgradeLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/SpeedUpgradeContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Speed Upgrade:"
+
+[node name="SpeedUpgradeSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/SpeedUpgradeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 200.0
+step = 10.0
+value = 50.0
+
+[node name="HomingTimeContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection"]
+layout_mode = 2
+
+[node name="HomingTimeLabelContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HomingTimeContainer"]
+layout_mode = 2
+
+[node name="HomingTimeLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HomingTimeContainer/HomingTimeLabelContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Homing Time:"
+
+[node name="HomingTimeValueLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HomingTimeContainer/HomingTimeLabelContainer"]
+layout_mode = 2
+text = "0.10s"
+
+[node name="HomingTimeSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HomingTimeContainer"]
+layout_mode = 2
+min_value = 0.05
+max_value = 1.0
+step = 0.05
+value = 0.1
+
+[node name="HSeparator4" type="HSeparator" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="BiddingSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer"]
+layout_mode = 2
+
+[node name="BiddingLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/BiddingSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Bidding Menu"
+
+[node name="UpgradeShopCountContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ConfigContainer/BiddingSection"]
+layout_mode = 2
+
+[node name="UpgradeShopCountLabel" type="Label" parent="VBoxContainer/ScrollContainer/ConfigContainer/BiddingSection/UpgradeShopCountContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Upgrades in Shop:"
+
+[node name="UpgradeShopCountSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/ConfigContainer/BiddingSection/UpgradeShopCountContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 2.0
+max_value = 8.0
+value = 4.0
+
+[connection signal="pressed" from="VBoxContainer/HeaderContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/WinCountContainer/WinCountSpinBox" to="." method="_on_win_count_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/StartingMoneyContainer/StartingMoneySpinBox" to="." method="_on_starting_money_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/KillRewardContainer/KillRewardSpinBox" to="." method="_on_kill_reward_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/GameRulesSection/DeathRewardContainer/DeathRewardSpinBox" to="." method="_on_death_reward_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseHealthContainer/BaseHealthSpinBox" to="." method="_on_base_health_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/PlayerConfigSection/BaseDamageContainer/BaseDamageSpinBox" to="." method="_on_base_damage_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/WeaponSection/ShotCooldownContainer/ShotCooldownSlider" to="." method="_on_shot_cooldown_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/FirerateContainer/FirerateSlider" to="." method="_on_firerate_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HealthUpgradeContainer/HealthUpgradeSpinBox" to="." method="_on_health_upgrade_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/SpeedUpgradeContainer/SpeedUpgradeSpinBox" to="." method="_on_speed_upgrade_spin_box_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/UpgradeSection/HomingTimeContainer/HomingTimeSlider" to="." method="_on_homing_time_slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/ScrollContainer/ConfigContainer/BiddingSection/UpgradeShopCountContainer/UpgradeShopCountSpinBox" to="." method="_on_upgrade_shop_count_spin_box_value_changed"]

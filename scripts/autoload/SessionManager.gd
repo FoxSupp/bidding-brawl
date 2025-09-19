@@ -15,7 +15,7 @@ func newPlayer(peer_id: int) -> void:
 		
 	player_stats[peer_id] = {
 		"username": NetworkManager.get_username(peer_id),
-		"money": GameConfig.PLAYER_STARTING_MONEY,
+		"money": GameConfig.get_starting_money(),
 		"kills": 0,
 		"wins": 0,
 		"winstreak": 0,
