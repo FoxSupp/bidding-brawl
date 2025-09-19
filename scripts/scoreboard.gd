@@ -8,6 +8,15 @@ extends CanvasLayer
 func _ready() -> void:
 	# Initially hidden
 	visible = false
+	
+	# Connect to player stats updates
+	if not SessionManager.player_stats_received.is_connected(_on_player_stats_updated):
+		SessionManager.player_stats_received.connect(_on_player_stats_updated)
+
+func _on_player_stats_updated(_peer_id: int, _stats: Dictionary) -> void:
+	# Update scoreboard if it's currently visible
+	if visible:
+		update_scoreboard()
 
 func show_scoreboard() -> void:
 	visible = true
@@ -30,10 +39,20 @@ func update_scoreboard() -> void:
 	if not players_node:
 		return
 	
+	# Check if we have any player stats
+	if SessionManager.player_stats.is_empty():
+		# Request stats from server if we're a client and have no stats
+		if not multiplayer.is_server():
+			print("Scoreboard: No player stats available on client, requesting from server...")
+		return
+	
 	# Get all players (alive and dead)
 	var all_players = []
 	for player_id in SessionManager.player_stats.keys():
 		var player_data = SessionManager.get_player_display_stats(player_id)
+		if player_data.is_empty():
+			continue
+			
 		var player_node = players_node.get_node_or_null(str(player_id))
 		var is_alive = player_node != null and not player_node.dead
 		

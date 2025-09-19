@@ -22,6 +22,9 @@ func newPlayer(peer_id: int) -> void:
 		"losingstreak": 0,
 		"upgrades": []
 	}
+	
+	# Sync stats to all clients after adding new player
+	rpc("sync_all_player_stats", player_stats)
 
 func add_money(peer_id: int, amount: int) -> void:
 	if not multiplayer.is_server(): 
@@ -33,6 +36,8 @@ func add_money(peer_id: int, amount: int) -> void:
 		
 	player_stats[peer_id]["money"] += amount
 	rpc_id(peer_id, "receive_player_stats", peer_id, player_stats[peer_id])
+	# Also sync to all clients for scoreboard updates
+	rpc("sync_all_player_stats", player_stats)
 
 func add_kill(peer_id: int) -> void:
 	if not multiplayer.is_server(): 
@@ -43,6 +48,8 @@ func add_kill(peer_id: int) -> void:
 		return
 		
 	player_stats[peer_id]["kills"] += 1
+	# Sync stats to all clients after updating
+	rpc("sync_all_player_stats", player_stats)
 
 func win(peer_id: int) -> void:
 	if not multiplayer.is_server(): 
@@ -62,6 +69,9 @@ func win(peer_id: int) -> void:
 		if other_id != peer_id:
 			player_stats[other_id]["winstreak"] = 0
 			player_stats[other_id]["losingstreak"] += 1
+	
+	# Sync stats to all clients after updating
+	rpc("sync_all_player_stats", player_stats)
 
 func add_upgrade(peer_id: int, upgrade_id: String) -> void:
 	if not multiplayer.is_server(): 
@@ -121,4 +131,11 @@ func get_player_stats(peer_id: int) -> void:
 
 @rpc("any_peer", "call_local")
 func receive_player_stats(peer_id: int, stats: Dictionary) -> void:
+	# Store the stats locally on clients as well
+	player_stats[peer_id] = stats
 	emit_signal("player_stats_received", peer_id, stats)
+
+# Send all player stats to all clients
+@rpc("authority", "call_local")
+func sync_all_player_stats(all_stats: Dictionary) -> void:
+	player_stats = all_stats
