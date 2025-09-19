@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://br4t2att6xano"]
+[gd_scene load_steps=4 format=3 uid="uid://br4t2att6xano"]
 
 [ext_resource type="Script" uid="uid://c8h0ypa4hh1h4" path="res://scripts/lobby.gd" id="1_5k83l"]
 [ext_resource type="PackedScene" uid="uid://csvyydtnk1vn3" path="res://scenes/menu/player_slot.tscn" id="2_5k83l"]
+[ext_resource type="PackedScene" uid="uid://ci8p8tvdlnlax" path="res://scenes/menu/lobby_config_panel.tscn" id="3_config"]
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -99,7 +100,7 @@ offset_bottom = 648.0
 disabled = true
 text = "Start Game"
 
-[node name="ChatBackground" type="Panel" parent="Lobby"]
+[node name="RightPanelContainer" type="VBoxContainer" parent="Lobby"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.448
@@ -111,7 +112,11 @@ offset_top = 0.0349884
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="Chat" type="RichTextLabel" parent="Lobby/ChatBackground"]
+[node name="ChatBackground" type="Panel" parent="Lobby/RightPanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Chat" type="RichTextLabel" parent="Lobby/RightPanelContainer/ChatBackground"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -126,6 +131,10 @@ theme_override_font_sizes/normal_font_size = 32
 scroll_active = false
 scroll_following = true
 shortcut_keys_enabled = false
+
+[node name="ConfigPanel" parent="Lobby/RightPanelContainer" instance=ExtResource("3_config")]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="ButtonBack" type="Button" parent="."]
 layout_mode = 1

@@ -115,3 +115,42 @@ func get_error_message(key: String, args: Array = []) -> String:
 ## Gets Steam lobby join failure message
 func get_steam_join_fail_message(response_code: int) -> String:
 	return STEAM_JOIN_FAIL_MESSAGES.get(response_code, "Unknown error occurred while joining lobby.")
+
+## Helper functions to get values that can be overridden by LobbyConfig
+## These should be used instead of the constants directly
+
+func get_win_count() -> int:
+	return LobbyConfig.win_count if LobbyConfig else WIN_COUNT
+
+func get_starting_money() -> int:
+	return LobbyConfig.starting_money if LobbyConfig else PLAYER_STARTING_MONEY
+
+func get_kill_money_reward() -> int:
+	return LobbyConfig.kill_money_reward if LobbyConfig else KILL_MONEY_REWARD
+
+func get_death_money_reward() -> int:
+	return LobbyConfig.death_money_reward if LobbyConfig else DEATH_MONEY_REWARD
+
+func get_base_health() -> int:
+	return LobbyConfig.base_health if LobbyConfig else PLAYER_BASE_HEALTH
+
+func get_base_damage() -> float:
+	return LobbyConfig.base_damage if LobbyConfig else PLAYER_BASE_DAMAGE
+
+func get_shot_cooldown() -> float:
+	return LobbyConfig.shot_cooldown if LobbyConfig else SHOT_COOLDOWN_BASE
+
+func get_firerate_multiplier() -> float:
+	return LobbyConfig.firerate_multiplier if LobbyConfig else FIRERATE_MULTIPLIER
+
+func get_health_upgrade_amount() -> int:
+	return LobbyConfig.health_upgrade_amount if LobbyConfig else HEALTH_UPGRADE_AMOUNT
+
+func get_speed_upgrade_amount() -> float:
+	return LobbyConfig.speed_upgrade_amount if LobbyConfig else SPEED_UPGRADE_AMOUNT
+
+func get_homing_time_amount() -> float:
+	return LobbyConfig.homing_time_amount if LobbyConfig else HOMING_TIME_AMOUNT
+
+func get_upgrade_shop_count() -> int:
+	return LobbyConfig.upgrade_shop_count if LobbyConfig else UPGRADE_SHOP_COUNT

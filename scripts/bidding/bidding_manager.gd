@@ -13,7 +13,7 @@ func _ready() -> void:
 		return
 
 	# Initialize upgrade shop with random upgrades
-	for i in range(GameConfig.UPGRADE_SHOP_COUNT):
+	for i in range(GameConfig.get_upgrade_shop_count()):
 		available_upgrades.append({
 			"id": i,
 			"upgrade": UpgradeManager.get_random_upgrade(),

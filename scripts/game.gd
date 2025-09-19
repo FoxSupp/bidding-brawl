@@ -142,7 +142,7 @@ func _end_game(winner_id: int):
 	await get_tree().create_timer(GameConfig.BIDDING_DESPAWN_DELAY).timeout
 	if multiplayer.is_server():
 		print(SessionManager.player_stats[winner_id]["wins"])
-		if SessionManager.player_stats[winner_id]["wins"] >= GameConfig.WIN_COUNT:
+		if SessionManager.player_stats[winner_id]["wins"] >= GameConfig.get_win_count():
 			SessionManager.winner = SessionManager.player_stats[winner_id]
 			NetworkManager.rpc("change_to_winning")
 		else:

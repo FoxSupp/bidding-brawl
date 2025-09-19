@@ -157,7 +157,7 @@ func _handle_shooting() -> void:
 		return
 	
 	# Set cooldown based on firerate upgrade
-	shoot_cooldown = GameConfig.SHOT_COOLDOWN_BASE * upgrade_firerate_multiplier
+	shoot_cooldown = GameConfig.get_shot_cooldown() * upgrade_firerate_multiplier
 	
 	var muzzle: Marker2D = muzzle_rotation.get_node("Muzzle")
 	var base_dir := muzzle.global_position.direction_to(input_synch.mouse_pos).normalized()
@@ -180,7 +180,7 @@ func _shoot_bullet(pos: Vector2, dir: Vector2) -> void:
 	
 	# Set bullet properties using GameConfig
 	if "damage" in projectile: 
-		projectile.damage = GameConfig.PLAYER_BASE_DAMAGE
+		projectile.damage = GameConfig.get_base_damage()
 	if "speed" in projectile: 
 		projectile.speed = GameConfig.BULLET_SPEED
 	if "lifetime" in projectile: 
@@ -221,8 +221,8 @@ func take_damage(damage: int, shooter_id: int) -> void:
 	
 	# Award money and kills when player dies (but not suicide)
 	if current_health <= 0 and shooter_id != name.to_int():
-		SessionManager.add_money(int(name), GameConfig.DEATH_MONEY_REWARD)
-		SessionManager.add_money(shooter_id, GameConfig.KILL_MONEY_REWARD)
+		SessionManager.add_money(int(name), GameConfig.get_death_money_reward())
+		SessionManager.add_money(shooter_id, GameConfig.get_kill_money_reward())
 		SessionManager.add_kill(shooter_id)
 
 func play_hit_sound() -> void:
@@ -257,7 +257,7 @@ func despawn_player() -> void:
 
 func _initialize_health() -> void:
 	# Calculate total max health including upgrades
-	max_health = GameConfig.PLAYER_BASE_HEALTH + upgrade_max_health
+	max_health = GameConfig.get_base_health() + upgrade_max_health
 	current_health = max_health
 	
 	# Update UI elements
