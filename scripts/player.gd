@@ -279,11 +279,7 @@ func play_shoot_sound_rpc() -> void:
 		# Louder for the shooter
 		shoot_sound.volume_db = GameConfig.SHOOTER_VOLUME_DB
 		shoot_sound.pitch_scale = 1.0
-	else:
-		# Quieter for other clients
-		shoot_sound.volume_db = GameConfig.OTHER_PLAYERS_VOLUME_DB
-		shoot_sound.pitch_scale = GameConfig.OTHER_PLAYERS_PITCH_SCALE
-	shoot_sound.play()
+		shoot_sound.play()
 
 @rpc("any_peer", "call_local")
 func play_hit_sound_rpc() -> void:
