@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnwcqcma1nw5y"]
+[gd_scene load_steps=6 format=3 uid="uid://bnwcqcma1nw5y"]
 
 [ext_resource type="Script" uid="uid://cbxialigjx3mi" path="res://scripts/bidding/bidding_menu.gd" id="1_6fnxy"]
 [ext_resource type="PackedScene" uid="uid://chvxopcas8yjd" path="res://scenes/bidding/player_stat_block.tscn" id="2_2qcm0"]
 [ext_resource type="Script" uid="uid://bp1b68d3621ng" path="res://scripts/bidding/bidding_manager.gd" id="2_e2fi0"]
 [ext_resource type="PackedScene" uid="uid://4itayjujs3an" path="res://scenes/bidding/upgrade_slot.tscn" id="4_2l2ip"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hsif1"]
+bg_color = Color(0.551915, 0.377017, 1, 1)
 
 [node name="BiddingMenu" type="Control" groups=["bidding_menu"]]
 layout_mode = 3
@@ -28,6 +31,7 @@ offset_right = -67.0
 offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hsif1")
 
 [node name="LabelReadyPlayers" type="Label" parent="Background"]
 layout_mode = 1
@@ -35,8 +39,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -140.0
-offset_bottom = -91.0
+offset_top = -35.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Waiting for Players to Ready up
@@ -50,8 +53,8 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -89.0
-offset_bottom = -66.0
+offset_top = -57.0
+offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Game starting in 5"
@@ -65,9 +68,9 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 415.0
-offset_top = -61.0
+offset_top = -106.0
 offset_right = -415.2
-offset_bottom = -11.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Ready"

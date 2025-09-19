@@ -81,6 +81,6 @@ func join_lobby(target_lobby_id: int) -> void:
 func _on_lobby_join_requested(this_lobby_id: int, _friend_id: int) -> void:
 	join_lobby(this_lobby_id)
 
-func _on_invite(who_invited, this_lobby_id, game_id):
+func _on_invite(_who_invited, _this_lobby_id, _game_id):
 	pass
 #endregion

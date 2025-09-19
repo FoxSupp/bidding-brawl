@@ -89,7 +89,23 @@ func update_highest_bid_display() -> void:
 @rpc("any_peer", "call_local")
 func ready_player() -> void:
 	if multiplayer.is_server():
-		ready_players.append(multiplayer.get_remote_sender_id())
+		var sender_id = multiplayer.get_remote_sender_id()
+		if sender_id in ready_players:
+			ready_players.erase(sender_id)
+			# Benachrichtige den spezifischen Client über den Status-Wechsel
+			rpc_id(sender_id, "update_local_ready_button", false)
+		else:
+			ready_players.append(sender_id)
+			# Benachrichtige den spezifischen Client über den Status-Wechsel
+			rpc_id(sender_id, "update_local_ready_button", true)
+
+@rpc("authority", "call_local")
+func update_local_ready_button(is_ready: bool) -> void:
+	# Nur der lokale Spieler sieht die Änderung seines Button-Texts
+	if is_ready:
+		button_ready.text = "Unready"
+	else:
+		button_ready.text = "Ready"
 
 @rpc("authority", "call_local")
 func update_waiting_ui(ready_count: int, total_count: int) -> void:
