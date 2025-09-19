@@ -7,6 +7,7 @@ signal connection_status_changed(status: String)
 signal error(message: String)
 signal players_updated(players: Dictionary)
 signal all_in_game
+signal all_in_bidding
 signal arena_selected(arena_path: String)
 
 # Scene paths (loaded on demand to avoid null PackedScene issues)
@@ -55,6 +56,10 @@ func _process(_delta: float) -> void:
 		if get_all_in_game() and not game_started:
 			game_started = true
 			emit_signal("all_in_game")
+		
+		# Check if all players are in bidding scene
+		if get_all_in_bidding():
+			emit_signal("all_in_bidding")
 
 func host() -> void:
 	peer = SteamMultiplayerPeer.new()
@@ -108,6 +113,16 @@ func get_all_in_game() -> bool:
 			return false
 	return true
 
+func get_all_in_bidding() -> bool:
+	if players.is_empty():
+		return false
+	
+	for player_id in players:
+		var player_data = players[player_id]
+		if typeof(player_data) == TYPE_DICTIONARY and not player_data.get("in_bidding", false):
+			return false
+	return true
+
 func get_all_players_registered() -> bool:
 	if players.is_empty():
 		return false
@@ -130,6 +145,7 @@ func _on_peer_connected(id: int) -> void:
 		players[id] = {
 			"username": "Connecting...", 
 			"in_game": false, 
+			"in_bidding": false,
 			"status": PlayerStatus.CONNECTING, 
 			"steam_id": 0
 		}
@@ -160,6 +176,14 @@ func _on_server_disconnected() -> void:
 
 @rpc("authority", "call_local")
 func change_to_bidding() -> void:
+	# Reset bidding flags for all players
+	if multiplayer.is_server():
+		for player_id in players:
+			var player_data = players[player_id]
+			if typeof(player_data) == TYPE_DICTIONARY:
+				player_data["in_bidding"] = false
+		_broadcast_players()
+	
 	# Add small delay to ensure all clients are ready for scene transition
 	await get_tree().create_timer(GameConfig.SCENE_TRANSITION_DELAY).timeout
 	_change_scene(BIDDING_SCENE_PATH)
@@ -202,6 +226,7 @@ func register_player(username: String, steam_id: int = 0) -> void:
 	players[sender_id] = {
 		"username": username.strip_edges(), 
 		"in_game": false, 
+		"in_bidding": false,
 		"status": PlayerStatus.REGISTERED,
 		"steam_id": steam_id
 	}
@@ -227,6 +252,20 @@ func request_set_self_in_game(value: bool) -> void:
 		var entry = players[id]
 		if typeof(entry) == TYPE_DICTIONARY:
 			entry["in_game"] = value
+			players[id] = entry
+			rpc("sync_players", players)
+
+@rpc("any_peer", "call_local")
+func request_set_self_in_bidding(value: bool) -> void:
+	if not multiplayer.is_server():
+		return
+	var id: int = multiplayer.get_remote_sender_id()
+	id = 1 if id == 0 else id
+	
+	if players.has(id):
+		var entry = players[id]
+		if typeof(entry) == TYPE_DICTIONARY:
+			entry["in_bidding"] = value
 			players[id] = entry
 			rpc("sync_players", players)
 

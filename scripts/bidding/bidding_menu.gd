@@ -22,7 +22,15 @@ const UPGRADE_SLOT = preload("res://scenes/bidding/upgrade_slot.tscn")
 
 func _ready() -> void:
 	button_ready.pressed.connect(func(): rpc("ready_player"))
+	
+	# Signal that this client's bidding scene is ready
+	NetworkManager.rpc_id(1, "request_set_self_in_bidding", true)
+	
+	# Only server initializes the bidding data
 	if multiplayer.is_server():
+		# Wait for all clients to be ready before sending data
+		await NetworkManager.all_in_bidding
+		
 		rpc("update_player_stats_from_server", SessionManager.player_stats)
 		# Convert UpgradeBase array to Dictionary array for RPC
 		var upgrade_dicts: Array[Dictionary] = []
@@ -51,6 +59,13 @@ func _process(_delta: float) -> void:
 
 func update_highest_bid_display() -> void:
 	"""Updates the UI to show the highest bidder for each upgrade slot"""
+	if not multiplayer.is_server():
+		return
+		
+	# Ensure all clients are ready in bidding before making RPC calls
+	if not NetworkManager.get_all_in_bidding():
+		return
+	
 	# Wait for scene to be fully loaded before making RPC calls
 	await get_tree().process_frame
 	
